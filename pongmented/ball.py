@@ -8,16 +8,17 @@ from utils import *
 
 
 class Ball(object):
-    def __init__(self, window, position, radius, ball_color):
+    def __init__(self, window, position, radius, ball_color, speed_multiplier):
         self.window = window
         self.pos = np.array(position)
         self.vec = random.choice(UNIT_VECTORS)
         self.radius = radius
         self.color = ball_color
+        self.speed_multiplier = speed_multiplier
         self.bounding_rect = None
 
     def update(self):
-        self.pos += np.rint(self.vec).astype(int)
+        self.pos += self.vec.dot(self.speed_multiplier).round().astype(int)
         self.bounding_rect = Rect(self.pos - np.array([self.radius, self.radius]), (self.radius * 2, self.radius * 2))
 
     def draw(self):

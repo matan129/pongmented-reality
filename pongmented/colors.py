@@ -1,7 +1,7 @@
-import pygame
+import pygame as _pygame
 
-BLACK = pygame.color.THECOLORS['black']
-WHITE = pygame.color.THECOLORS['white']
-RED = pygame.color.THECOLORS['red']
-GREEN = pygame.color.THECOLORS['green']
-BLUE = pygame.color.THECOLORS['blue']
+BLACK = _pygame.color.THECOLORS['black']
+WHITE = _pygame.color.THECOLORS['white']
+RED = _pygame.color.THECOLORS['red']
+GREEN = _pygame.color.THECOLORS['green']
+BLUE = _pygame.color.THECOLORS['blue']

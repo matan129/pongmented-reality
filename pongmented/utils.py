@@ -27,4 +27,4 @@ def invert_color(color):
     return tuple(inverted)
 
 
-UNIT_VECTORS = [_v for _v in it.product([-1, 0, 1], repeat=2) if magnitude(_v) > 0]
+UNIT_VECTORS = [np.array(_v) for _v in it.product([-1, 0, 1], repeat=2) if magnitude(_v) > 0]

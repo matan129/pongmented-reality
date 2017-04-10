@@ -1,3 +1,4 @@
+import pygame
 from pygame.locals import *
 
 from pongmented import log
@@ -8,27 +9,30 @@ from pongmented.human_controls import HumanControls
 
 WIDTH = 640
 HEIGHT = 480
+FPS = 60
 
 
 class Pong(object):
-    def __init__(self, width, height):
+    def __init__(self, width, height, fps):
         self.window = None
         self.ball = None
         self.borders = None
         self.mouse_position = None
         self.human_controls = None
         self.reset(width, height)
+        self.clock = pygame.time.Clock()
+        self.fps = fps
 
     def reset(self, width, height):
         self.window = self.create_window(width, height)
-        self.ball = Ball(self.window, (width / 4, height / 2), 10, RED)
+        self.ball = Ball(self.window, (width / 4, height / 2), 10, RED, 5.0)
         self.borders = Borders(self.window, 2, GREEN)
         self.human_controls = HumanControls(self.window, 2, 28, BLUE)
 
     def run(self):
         log.info('Running!')
         while True:
-            pygame.time.delay(3)
+            self.clock.tick(self.fps)
             self.process_events()
             self.update()
             self.draw()
@@ -60,7 +64,7 @@ class Pong(object):
     @staticmethod
     def create_window(width, height):
         log.debug('Creating window of {}x{}', width, height)
-        return pygame.display.set_mode((width, height), pygame.RESIZABLE)
+        return pygame.display.set_mode((width, height), pygame.RESIZABLE | pygame.DOUBLEBUF)
 
 
 def main():
@@ -68,7 +72,7 @@ def main():
     pygame.init()
     pygame.display.set_caption('PONGmented Reality')
 
-    game = Pong(WIDTH, HEIGHT)
+    game = Pong(WIDTH, HEIGHT, FPS)
     game.run()
 
 
