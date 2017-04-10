@@ -7,7 +7,7 @@ setup(
     license='WTFPL',
     author='matan129, ronissim, tomerli97',
     description='Pong + Kinect = <3',
-    install_requires=['pygame', 'logbook', 'numpy', 'pykinect'],
+    install_requires=['pygame', 'logbook', 'numpy', 'pykinect', 'enum34'],
     entry_points={
         'console_scripts': [
             'run_pongmented = pongmented.game:main'

@@ -4,6 +4,7 @@ import pygame
 from pygame.locals import *
 
 from pongmented import log
+from pongmented.players import Players
 from utils import *
 
 
@@ -17,8 +18,10 @@ class Ball(object):
         self.speed_multiplier = speed_multiplier
         self.margin = margin
         self.bounding_rect = None
+        self.last_collided = None
 
     def update(self):
+        self.last_collided = []
         self.advance_pos()
         self.collide_human_controls()
         self.collide_borders()
@@ -29,9 +32,11 @@ class Ball(object):
         self.bounding_rect = Rect(self.pos - np.array([self.radius, self.radius]), (self.radius * 2, self.radius * 2))
 
     def collide_borders(self):
-        for edge, bounce_vector in self.game.borders.edges_to_vectors:
+        for edge, info in self.game.borders.edges:
             if edge.colliderect(self.bounding_rect):
-                self.vec *= bounce_vector
+                if info.opponent != Players.NO_OWNER:
+                    self.last_collided.append(info.opponent)
+                self.vec *= info.bounce_vector
                 self.uncollide_rect(edge)
 
     def collide_human_controls(self):

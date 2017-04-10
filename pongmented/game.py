@@ -6,6 +6,8 @@ from pongmented.ball import Ball
 from pongmented.borders import Borders
 from pongmented.colors import *
 from pongmented.human_controls import HumanControls
+from pongmented.players import Players
+from pongmented.score_display import ScoreDisplay
 
 WIDTH = 640
 HEIGHT = 480
@@ -14,14 +16,16 @@ FPS = 60
 
 class Pong(object):
     def __init__(self, width, height, fps):
+        self.start_size = (width, height)
         self.window = None
         self.ball = None
         self.borders = None
         self.mouse_position = None
         self.human_controls = None
-        self.reset(width, height)
         self.clock = pygame.time.Clock()
         self.fps = fps
+        self.score = None
+        self.score_display = None
 
     def reset(self, width, height):
         self.window = self.create_window(width, height)
@@ -29,8 +33,14 @@ class Pong(object):
         self.borders = Borders(self.window, border_width, GREEN)
         self.ball = Ball(self, (width / 4, height / border_width), 10, RED, 5.0, border_width)
         self.human_controls = HumanControls(self, border_width, 28, BLUE)
+        self.score_display = ScoreDisplay(self, RED, BLUE)
+        self.score = {
+            Players.PLAYER_1: 0,
+            Players.PLAYER_2: 0
+        }
 
     def run_blocked(self):
+        self.reset(*self.start_size)
         log.info('Running!')
         while True:
             self.clock.tick(self.fps)
@@ -52,12 +62,15 @@ class Pong(object):
     def update(self):
         self.human_controls.update()
         self.ball.update()
+        for player in self.ball.last_collided:
+            self.score[player] += 1
 
     def draw(self):
         self.window.fill(BLACK)
         self.borders.draw()
         self.ball.draw()
         self.human_controls.draw()
+        self.score_display.draw()
         pygame.display.update()
 
     @staticmethod
