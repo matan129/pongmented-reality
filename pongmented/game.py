@@ -1,82 +1,54 @@
 import pygame
 from pygame.locals import *
-import numpy as np
-import time
 
 from pongmented import log
+from pongmented.ball import Ball
+from pongmented.borders import Borders
 
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-RED = (255, 0, 0)
-GREEN = (0, 255, 0)
+BLACK = pygame.color.THECOLORS['black']
+WHITE = pygame.color.THECOLORS['white']
+RED = pygame.color.THECOLORS['red']
+GREEN = pygame.color.THECOLORS['green']
 
-WIDTH = 600
-HEIGHT = 400
-
-
-class Borders(object):
-    def __init__(self, window, stroke=2, border_color=GREEN):
-        self.window = window
-        self.color = border_color
-        self.stroke = stroke
-        w, h = self.window.get_size()
-        self.top = Rect(0, 0, w, stroke)
-        self.bottom = Rect(0, h - stroke, w, stroke)
-        self.right = Rect(w - stroke, 0, stroke, h)
-        self.left = Rect(0, 0, stroke, h)
-
-    def draw(self):
-        pygame.draw.rect(self.window, self.color, self.top)
-        pygame.draw.rect(self.window, self.color, self.bottom)
-        pygame.draw.rect(self.window, self.color, self.left)
-        pygame.draw.rect(self.window, self.color, self.right)
-
-
-class Ball(object):
-
-    def __init__(self, window, position, radius=10, ball_color=RED):
-        self.window = window
-        self.pos = np.array(position)
-        self.vec = np.array([1, 1])
-        self.radius = radius
-        self.color = ball_color
-        self.ball = pygame.draw.circle(self.window, self.color, self.pos, self.radius)
-
-    def draw(self):
-        self.ball = pygame.draw.circle(self.window, self.color, self.pos, self.radius)
-
-    def update(self):
-        self.pos += self.vec
-
-    def collide_borders(self, borders):
-        if borders.top.colliderect(self.ball):
-            self.vec *= np.array([1, -1])
-            self.pos[1] = borders.top.y + borders.top.height + self.radius
-        elif borders.bottom.colliderect(self.ball):
-            self.vec *= np.array([1, -1])
-            self.pos[1] = borders.bottom.y - self.radius
-
-        if borders.left.colliderect(self.ball):
-            self.vec *= np.array([-1, 1])
-            self.pos[0] = borders.left.x + borders.left.width + self.radius
-        elif borders.right.colliderect(self.ball):
-            self.vec *= np.array([-1, 1])
-            self.pos[0] = borders.right.x - self.radius
+WIDTH = 640
+HEIGHT = 480
 
 
 class Pong(object):
-
     def __init__(self):
-        self.mouse_position = (WIDTH/2, HEIGHT/2)
-        self.window = pygame.display.set_mode((WIDTH, HEIGHT), 0, 32)
-        self.ball = Ball(self.window, (WIDTH/4, HEIGHT/2))
-        self.borders = Borders(self.window)
+        self.window = None
+        self.ball = None
+        self.borders = None
         self.hands = None
+        self.mouse_position = None
+        self.load(WIDTH, HEIGHT)
+
+    def load(self, width, height):
+        self.window = self.create_window(width, height)
+        self.ball = Ball(self.window, (width / 4, height / 2), 10, RED)
+        self.borders = Borders(self.window, 2, GREEN)
+        self.hands = None  # TODO
 
     def run(self):
         while True:
-            self.tick()
+            pygame.time.delay(1)
+            self.process_events()
+            self.update()
             self.draw()
+
+    def process_events(self):
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                exit(0)
+            elif event.type == MOUSEMOTION:
+                self.mouse_position = event.pos
+            elif event.type == VIDEORESIZE:
+                if self.window.get_size() != (event.w, event.h):
+                    self.load(event.w, event.h)
+
+    def update(self):
+        self.ball.update()
+        self.ball.collide_borders(self.borders)
 
     def draw(self):
         self.window.fill(BLACK)
@@ -84,29 +56,18 @@ class Pong(object):
         self.ball.draw()
         pygame.display.update()
 
-    def draw_hands(self):
-        self.hands["hand1"] = pygame.draw.circle(self.window, RED, self.mouse_position, 15)
-
-    def update(self):
-        self.ball.update()
-        self.ball.collide_borders(self.borders)
-
-    def tick(self):
-        for event in pygame.event.get():
-            if event.type == QUIT:
-                exit(0)
-            elif event.type == MOUSEMOTION:
-                self.mouse_position = event.pos
-
-        time.sleep(0.01)
-        self.update()
+    @staticmethod
+    def create_window(width, height):
+        log.debug('Creating window of {}x{}', width, height)
+        return pygame.display.set_mode((width, height), pygame.RESIZABLE)
 
 
 def main():
-    log.info('Starting...')
+    log.info('Initializing...')
     pygame.init()
     pygame.display.set_caption('PONGmented Reality')
 
+    log.info('Running!')
     game = Pong()
     game.run()
 
