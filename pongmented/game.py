@@ -25,11 +25,12 @@ class Pong(object):
 
     def reset(self, width, height):
         self.window = self.create_window(width, height)
-        self.ball = Ball(self.window, (width / 4, height / 2), 10, RED, 5.0)
-        self.borders = Borders(self.window, 2, GREEN)
-        self.human_controls = HumanControls(self.window, 2, 28, BLUE)
+        border_width = 2
+        self.borders = Borders(self.window, border_width, GREEN)
+        self.ball = Ball(self, (width / 4, height / border_width), 10, RED, 5.0, border_width)
+        self.human_controls = HumanControls(self, border_width, 28, BLUE)
 
-    def run(self):
+    def run_blocked(self):
         log.info('Running!')
         while True:
             self.clock.tick(self.fps)
@@ -45,20 +46,18 @@ class Pong(object):
             elif event.type == VIDEORESIZE:
                 if self.window.get_size() != (event.w, event.h):
                     self.reset(event.w, event.h)
-            elif event.type == QUIT:
-                exit(0)
+            elif event.type == QUIT or event.type == KEYUP and event.key == K_ESCAPE:
+                terminate()
 
     def update(self):
-        self.human_controls.update(self.mouse_position)
+        self.human_controls.update()
         self.ball.update()
-        self.ball.collide_human_controls(self.human_controls)
-        self.ball.collide_borders(self.borders)
 
     def draw(self):
         self.window.fill(BLACK)
         self.borders.draw()
-        self.human_controls.draw()
         self.ball.draw()
+        self.human_controls.draw()
         pygame.display.update()
 
     @staticmethod
@@ -67,13 +66,18 @@ class Pong(object):
         return pygame.display.set_mode((width, height), pygame.RESIZABLE | pygame.DOUBLEBUF)
 
 
+def terminate(code=0):
+    log.info('Terminating')
+    exit(code)
+
+
 def main():
     log.info('Initializing...')
     pygame.init()
     pygame.display.set_caption('PONGmented Reality')
 
     game = Pong(WIDTH, HEIGHT, FPS)
-    game.run()
+    game.run_blocked()
 
 
 if __name__ == '__main__':

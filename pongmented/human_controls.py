@@ -1,18 +1,18 @@
 import pygame
 import numpy as np
 
-from pongmented.utils import clamp, invert_color
+from pongmented.utils import invert_color, clamp_to_window
 
 
 class HumanControls(object):
-    def __init__(self, window, margin, radius, color):
-        self.window = window
-        self.mouse_marker = HumanMarker(window, margin, radius, color, 'M1')
+    def __init__(self, game, margin, radius, color):
+        self.game = game
+        self.mouse_marker = HumanMarker(game, margin, radius, color, 'M1')
         self.markers = [self.mouse_marker]
 
-    def update(self, mouse_position):
+    def update(self):
         # TODO: Use Kinect input :)
-        self.mouse_marker.update(mouse_position)
+        self.mouse_marker.update(self.game.mouse_position)
 
     def draw(self):
         for marker in self.markers:
@@ -20,8 +20,8 @@ class HumanControls(object):
 
 
 class HumanMarker(object):
-    def __init__(self, window, margin, radius, color, label=None):
-        self.window = window
+    def __init__(self, game, margin, radius, color, label=None):
+        self.game = game
         self.margin = margin
         self.radius = radius
         self.color = color
@@ -34,19 +34,9 @@ class HumanMarker(object):
             self.label = None
 
     def update(self, pos):
-        self.pos = np.array(self.clamp_position(pos))
-
-    def clamp_position(self, pos):
-        min_x = self.radius + self.margin
-        min_y = self.radius + self.margin
-        w, h = self.window.get_size()
-        max_x = w - self.radius - self.margin
-        max_y = h - self.radius - self.margin
-        x = clamp(pos[0], min_x, max_x)
-        y = clamp(pos[1], min_y, max_y)
-        return np.array([x, y])
+        self.pos = clamp_to_window(self.game.window, pos, self.radius + self.margin)
 
     def draw(self):
-        pygame.draw.circle(self.window, self.color, self.pos, self.radius)
+        pygame.draw.circle(self.game.window, self.color, self.pos, self.radius)
         if self.label:
-            self.window.blit(self.label, self.pos - (np.array([self.radius, self.radius]) / 2))
+            self.game.window.blit(self.label, self.pos - (np.array([self.radius, self.radius]) / 2))
