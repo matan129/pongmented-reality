@@ -1,5 +1,6 @@
 import pygame
-from pygame.rect import Rect
+from pygame.locals import *
+import numpy as np
 
 
 class Borders(object):
@@ -12,9 +13,13 @@ class Borders(object):
         self.bottom = Rect(0, h - stroke, w, stroke)
         self.right = Rect(w - stroke, 0, stroke, h)
         self.left = Rect(0, 0, stroke, h)
+        self.edges_to_vectors = [
+            (self.top, np.array([1, -1])),
+            (self.bottom, np.array([1, -1])),
+            (self.left, np.array([-1, 1])),
+            (self.right, np.array([-1, 1]))
+        ]
 
     def draw(self):
-        pygame.draw.rect(self.window, self.color, self.top)
-        pygame.draw.rect(self.window, self.color, self.bottom)
-        pygame.draw.rect(self.window, self.color, self.left)
-        pygame.draw.rect(self.window, self.color, self.right)
+        for edge, _ in self.edges_to_vectors:
+            pygame.draw.rect(self.window, self.color, edge)

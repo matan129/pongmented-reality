@@ -23,7 +23,7 @@ class Pong(object):
         self.window = self.create_window(width, height)
         self.ball = Ball(self.window, (width / 4, height / 2), 10, RED)
         self.borders = Borders(self.window, 2, GREEN)
-        self.human_controls = HumanControls(self.window, 28, BLUE)
+        self.human_controls = HumanControls(self.window, 2, 28, BLUE)
 
     def run(self):
         log.info('Running!')
@@ -35,13 +35,14 @@ class Pong(object):
 
     def process_events(self):
         for event in pygame.event.get():
-            if event.type == QUIT:
-                exit(0)
-            elif event.type == MOUSEMOTION:
+            if event.type == MOUSEMOTION:
+                log.trace('Mouse pos: {}',  event.pos)
                 self.mouse_position = event.pos
             elif event.type == VIDEORESIZE:
                 if self.window.get_size() != (event.w, event.h):
                     self.reset(event.w, event.h)
+            elif event.type == QUIT:
+                exit(0)
 
     def update(self):
         self.human_controls.update(self.mouse_position)
@@ -52,8 +53,8 @@ class Pong(object):
     def draw(self):
         self.window.fill(BLACK)
         self.borders.draw()
-        self.ball.draw()
         self.human_controls.draw()
+        self.ball.draw()
         pygame.display.update()
 
     @staticmethod
