@@ -11,21 +11,22 @@ HEIGHT = 480
 
 
 class Pong(object):
-    def __init__(self):
+    def __init__(self, width, height):
         self.window = None
         self.ball = None
         self.borders = None
         self.mouse_position = None
         self.human_controls = None
-        self.load(WIDTH, HEIGHT)
+        self.reset(width, height)
 
-    def load(self, width, height):
+    def reset(self, width, height):
         self.window = self.create_window(width, height)
         self.ball = Ball(self.window, (width / 4, height / 2), 10, RED)
         self.borders = Borders(self.window, 2, GREEN)
-        self.human_controls = HumanControls(self.window, 16, BLUE)
+        self.human_controls = HumanControls(self.window, 28, BLUE)
 
     def run(self):
+        log.info('Running!')
         while True:
             pygame.time.delay(3)
             self.process_events()
@@ -40,13 +41,13 @@ class Pong(object):
                 self.mouse_position = event.pos
             elif event.type == VIDEORESIZE:
                 if self.window.get_size() != (event.w, event.h):
-                    self.load(event.w, event.h)
+                    self.reset(event.w, event.h)
 
     def update(self):
         self.human_controls.update(self.mouse_position)
         self.ball.update()
-        self.ball.collide_borders(self.borders)
         self.ball.collide_human_controls(self.human_controls)
+        self.ball.collide_borders(self.borders)
 
     def draw(self):
         self.window.fill(BLACK)
@@ -66,8 +67,7 @@ def main():
     pygame.init()
     pygame.display.set_caption('PONGmented Reality')
 
-    log.info('Running!')
-    game = Pong()
+    game = Pong(WIDTH, HEIGHT)
     game.run()
 
 

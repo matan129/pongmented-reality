@@ -1,16 +1,14 @@
-import numpy as np
 import pygame
 from pygame.locals import *
 
 from utils import *
-from pongmented import log
 
 
 class Ball(object):
     def __init__(self, window, position, radius, ball_color):
         self.window = window
         self.pos = np.array(position)
-        self.vec = np.array([1.0, 1.0])
+        self.vec = np.array([1, 1])
         self.radius = radius
         self.color = ball_color
         self.ball = None
@@ -26,17 +24,17 @@ class Ball(object):
             return
 
         if borders.top.colliderect(self.ball):
-            self.vec *= np.array([1.0, -1.0])
+            self.vec *= np.array([1, -1])
             self.uncollide_rect(borders.top)
         elif borders.bottom.colliderect(self.ball):
-            self.vec *= np.array([1.0, -1.0])
+            self.vec *= np.array([1, -1])
             self.uncollide_rect(borders.bottom)
 
         if borders.left.colliderect(self.ball):
-            self.vec *= np.array([-1.0, 1.0])
+            self.vec *= np.array([-1, 1])
             self.uncollide_rect(borders.left)
         elif borders.right.colliderect(self.ball):
-            self.vec *= np.array([-1.0, 1.0])
+            self.vec *= np.array([-1, 1])
             self.uncollide_rect(borders.right)
 
     def uncollide_rect(self, rect):

@@ -4,11 +4,14 @@ import numpy as np
 
 class HumanControls(object):
     def __init__(self, window, radius, color):
-        self.markers = [HumanMarker(window, radius, color)]
+        self.window = window
+        self.w, self.h = window.get_size()
+        self.mouse_marker = HumanMarker(window, radius, color)
+        self.markers = [self.mouse_marker]
 
     def update(self, mouse_position):
         # TODO: Use Kinect input :)
-        self.markers[0].update(mouse_position)
+        self.mouse_marker.update(mouse_position)
 
     def draw(self):
         for marker in self.markers:
