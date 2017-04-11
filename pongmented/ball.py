@@ -1,5 +1,3 @@
-import random
-
 import pygame
 from pygame.locals import *
 
@@ -12,7 +10,7 @@ class Ball(object):
     def __init__(self, game, position, radius, ball_color, speed_multiplier, margin):
         self.game = game
         self.pos = np.array(position)
-        self.vec = random.choice(UNIT_VECTORS)
+        self.vec = random_unit_vector()
         self.radius = radius
         self.color = ball_color
         self.speed_multiplier = speed_multiplier
@@ -29,7 +27,7 @@ class Ball(object):
 
     def advance_pos(self):
         self.pos += self.vec.dot(self.speed_multiplier).round().astype(int)
-        self.bounding_rect = Rect(self.pos - np.array([self.radius, self.radius]), (self.radius * 2, self.radius * 2))
+        self.bounding_rect = Rect(self.pos - np.repeat([self.radius], 2), np.repeat([self.radius * 2], 2))
 
     def collide_borders(self):
         for edge, info in self.game.borders.edges:

@@ -1,5 +1,3 @@
-import itertools as it
-
 import numpy as np
 
 
@@ -16,7 +14,8 @@ def magnitude(vec):
     return np.linalg.norm(vec)
 
 
-UNIT_VECTORS = [np.array(_v) for _v in it.product([-1, 0, 1], repeat=2) if magnitude(_v) > 0]
+def random_unit_vector(dims=2):
+    return normalize_to_unit(np.random.normal(size=dims))
 
 
 def invert_color(color):
