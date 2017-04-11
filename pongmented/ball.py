@@ -1,5 +1,6 @@
 import pygame
 from pygame.locals import *
+from pkg_resources import resource_stream
 
 from pongmented import log
 from pongmented.players import Players
@@ -17,6 +18,8 @@ class Ball(object):
         self.margin = margin
         self.bounding_rect = None
         self.last_collided = None
+        self.hit_sound = pygame.mixer.Sound(resource_stream('pongmented.resources.sounds', 'collide.wav'))
+        self.goal_sound = pygame.mixer.Sound(resource_stream('pongmented.resources.sounds', 'goal.wav'))
 
     def update(self):
         self.last_collided = []
@@ -34,6 +37,9 @@ class Ball(object):
             if edge.colliderect(self.bounding_rect):
                 if info.opponent != Players.NO_OWNER:
                     self.last_collided.append(info.opponent)
+                    self.goal_sound.play()
+                else:
+                    self.hit_sound.play()
                 self.vec *= info.bounce_vector
                 self.uncollide_rect(edge)
 
@@ -42,6 +48,7 @@ class Ball(object):
             if are_circles_colliding(self.pos, self.radius, marker.pos, marker.radius):
                 self.vec = normalize_to_unit(self.pos - marker.pos)
                 self.uncollide_circle(marker.pos, marker.radius)
+                self.hit_sound.play()
 
     def uncollide_rect(self, rect):
         while rect.colliderect(self.bounding_rect):
