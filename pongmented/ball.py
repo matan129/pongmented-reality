@@ -1,10 +1,10 @@
 import pygame
 from pygame.locals import *
-from pkg_resources import resource_stream
 
 from pongmented import log
 from pongmented.players import Players
 from utils import *
+from resources import get_resource_path
 
 
 class Ball(object):
@@ -18,8 +18,8 @@ class Ball(object):
         self.margin = margin
         self.bounding_rect = None
         self.last_collided = None
-        self.hit_sound = pygame.mixer.Sound(resource_stream('pongmented.resources.sounds', 'collide.wav'))
-        self.goal_sound = pygame.mixer.Sound(resource_stream('pongmented.resources.sounds', 'goal.wav'))
+        self.hit_sound = pygame.mixer.Sound(get_resource_path('sounds', 'collide.wav'))
+        self.goal_sound = pygame.mixer.Sound(get_resource_path('sounds', 'goal.wav'))
 
     def update(self):
         self.last_collided = []
