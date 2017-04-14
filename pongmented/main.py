@@ -21,8 +21,8 @@ def main():
     log.info('Starting...')
     setup_pygame()
     setup_pymunk()
-    game = PongEngine((1024, 480), 120)
-    game.run(debug_render=False)
+    game = PongEngine((1600, 800), 120)
+    game.run(debug_render=True)
 
 
 if __name__ == '__main__':

@@ -9,6 +9,9 @@ from pongmented.events import PongEvents
 
 
 class Ball(GameObject):
+    """
+    A thing that bounces.    
+    """
     def __init__(self, window, space, event_manager, position, velocity):
         super(Ball, self).__init__(window, space, event_manager)
         self.radius = 15

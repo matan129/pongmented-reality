@@ -6,6 +6,11 @@ from game_object import GameObject
 
 
 class ScoreDisplay(GameObject):
+    """
+    Displays the score on the board.
+    Also displays some info after the game is over.
+    """
+
     def __init__(self, window, space, event_manager):
         super(ScoreDisplay, self).__init__(window, space, event_manager)
         self.color = THECOLORS['lightgray']

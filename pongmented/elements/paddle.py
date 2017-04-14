@@ -7,6 +7,9 @@ from game_object import GameObject
 
 
 class Paddle(GameObject):
+    """
+    Mouse-controlled paddle.
+    """
     def __init__(self, window, space, event_manager):
         super(Paddle, self).__init__(window, space, event_manager)
         self.radius = 40
