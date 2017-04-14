@@ -1,12 +1,14 @@
 import numpy as np
+import enum
 
-COLLISION_TYPES = {name: i for i, name in enumerate([
-    'ball',
-    'frame',
-    'right_wall',
-    'left_wall',
-    'human_controls'
-])}
+
+@enum.unique
+class CollisionTypes(enum.IntEnum):
+    BALL = 0
+    FRAME = 1
+    RIGHT_WALL = 2
+    LEFT_WALL = 3
+    PADDLE = 4
 
 
 def setup_elasticity(shape):
@@ -23,3 +25,10 @@ def constant_velocity(speed):
     def _constant_velocity(body, gravity, damping, dt):
         body.velocity = body.velocity.normalized() * speed
     return _constant_velocity
+
+
+def notify_hit(arbiter, space, data):
+    event = data['event']
+    event_manager = data['event_manager']
+    event_manager.events.append(event)
+    return True

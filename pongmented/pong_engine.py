@@ -44,12 +44,12 @@ class PongEngine(object):
         self.window = pygame.display.set_mode((w, h), pygame.RESIZABLE | pygame.DOUBLEBUF)
         self.pymunk_debug_draw_options = pygame_util.DrawOptions(self.window)
 
-        self.ball = Ball(self.window, self.space, (w / 2, h / 2), (0, 0))
+        self.ball = Ball(self.window, self.space, self.event_manager, (w / 2, h / 2), (0, 0))
         self.elements = [
             Walls(self.window, self.space, self.event_manager),
             self.ball,
-            Paddle(self.window, self.space),
-            ScoreDisplay(self.window, self.space)
+            Paddle(self.window, self.space, self.event_manager),
+            ScoreDisplay(self.window, self.space, self.event_manager)
         ]
         self.ball_started = False
 
@@ -96,6 +96,8 @@ class PongEngine(object):
                 self.state['score']['left'] += 1
                 self.sound_manager.goal_sound.play()
                 self.start_ball()
+            elif event == PongEvents.BALL_PADDLE_HIT:
+                self.sound_manager.hit_sound.play()
             else:
                 log.warn('Unknown event: {}', event)
 
@@ -108,11 +110,11 @@ class PongEngine(object):
     def render(self, debug):
         self.window.fill(THECOLORS['black'])
 
-        if debug:
-            self.space.debug_draw(self.pymunk_debug_draw_options)
-
         for element in self.elements:
             element.render()
+
+        if debug:
+            self.space.debug_draw(self.pymunk_debug_draw_options)
 
         pygame.display.flip()
         pygame.display.set_caption('PONGmented Reality [FPS: {}]'.format(self.clock.get_fps()))

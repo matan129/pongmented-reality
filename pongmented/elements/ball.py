@@ -2,14 +2,15 @@ import pygame
 import pymunk
 from pygame.color import THECOLORS
 
-from common import setup_elasticity, round_array
+from common import setup_elasticity, round_array, CollisionTypes, notify_hit
 from game_object import GameObject
 from pongmented.elements.common import constant_velocity
+from pongmented.events import PongEvents
 
 
 class Ball(GameObject):
-    def __init__(self, window, space, position, velocity):
-        super(Ball, self).__init__(window, space)
+    def __init__(self, window, space, event_manager, position, velocity):
+        super(Ball, self).__init__(window, space, event_manager)
         self.radius = 15
         self.color = THECOLORS['red']
         mass = 1
@@ -18,7 +19,15 @@ class Ball(GameObject):
         self.body.velocity_func = constant_velocity(500)
         self.set_body_params(position, velocity)
         self.shape = setup_elasticity(pymunk.Circle(self.body, self.radius))
+        self.shape.collision_type = CollisionTypes.BALL
         self.space.add(self.shape, self.body)
+
+        handler = space.add_collision_handler(CollisionTypes.BALL, CollisionTypes.PADDLE)
+        handler.begin = notify_hit
+        handler.data.update({
+            'event': PongEvents.BALL_PADDLE_HIT,
+            'event_manager': self.event_manager
+        })
 
     def set_body_params(self, position, velocity):
         self.body.position = position
