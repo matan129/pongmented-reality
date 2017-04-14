@@ -152,7 +152,7 @@ class PongEngine(object):
         for element in self.elements:
             element.render()
 
-        if debug:
+        if debug and not self.state['game_over']:
             self.space.debug_draw(self.pymunk_debug_draw_options)
 
         pygame.display.flip()
