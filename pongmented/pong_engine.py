@@ -40,7 +40,7 @@ class PongEngine(object):
         log.info('Creating graphics ({}x{})', w, h)
         self.space = pymunk.Space()
         self.space.gravity = (0, 0)
-
+        self.space.collision_bias = 0
         self.window = pygame.display.set_mode((w, h), pygame.RESIZABLE | pygame.DOUBLEBUF)
         self.pymunk_debug_draw_options = pygame_util.DrawOptions(self.window)
 

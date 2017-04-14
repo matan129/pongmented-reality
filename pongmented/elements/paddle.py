@@ -9,7 +9,7 @@ from game_object import GameObject
 class Paddle(GameObject):
     def __init__(self, window, space):
         super(Paddle, self).__init__(window, space)
-        self.radius = 60
+        self.radius = 40
         self.color = THECOLORS['blue']
         self.body = pymunk.Body(body_type=pymunk.Body.KINEMATIC)
         self.body.velocity_func = constant_velocity(0)

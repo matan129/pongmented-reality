@@ -10,7 +10,7 @@ from pongmented.elements.common import constant_velocity
 class Ball(GameObject):
     def __init__(self, window, space, position, velocity):
         super(Ball, self).__init__(window, space)
-        self.radius = 25
+        self.radius = 15
         self.color = THECOLORS['red']
         mass = 1
         moment = pymunk.moment_for_circle(mass, 0, self.radius)
