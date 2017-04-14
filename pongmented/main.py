@@ -22,7 +22,7 @@ def main():
     setup_pygame()
     setup_pymunk()
     game = PongEngine((1024, 480), 120)
-    game.run(debug_render=True)
+    game.run(debug_render=False)
 
 
 if __name__ == '__main__':

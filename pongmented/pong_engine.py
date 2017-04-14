@@ -8,7 +8,7 @@ from elements import *
 from events import EventManager, PongEvents
 from pongmented import log
 from sound import SoundManager
-from utils import random_unit_vector
+from utils import random_unit_vector, point_to_pygame
 
 
 class PongEngine(object):
@@ -58,9 +58,6 @@ class PongEngine(object):
         self.ball.set_body_params((w / 2, h / 2), random_unit_vector())
         self.ball_started = True
 
-    def point_to_pygame(self, point):
-        return pygame_util.to_pygame(point, self.window)
-
     def process_pygame_events(self):
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -68,7 +65,7 @@ class PongEngine(object):
             elif event.type == KEYDOWN and event.key == K_ESCAPE:
                 self.running = False
             elif event.type == MOUSEMOTION:
-                self.state['mouse_position'] = self.point_to_pygame(event.pos)
+                self.state['mouse_position'] = point_to_pygame(self.window, event.pos)
             elif event.type == VIDEORESIZE:
                 if event.size != self.window.get_size():
                     self.create_graphics(event.size)
