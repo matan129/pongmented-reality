@@ -1,0 +1,1 @@
+from kinect import Kinect

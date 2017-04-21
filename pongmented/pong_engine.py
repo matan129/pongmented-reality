@@ -8,6 +8,7 @@ from pymunk import pygame_util
 from elements import *
 from events import EventManager, PongEvents
 from pongmented import log
+from pongmented.kinect import Kinect
 from sound import SoundManager
 
 
@@ -22,7 +23,7 @@ class PongEngine(object):
     """
 
     def __init__(self, size, fps):
-        self.max_score = 8
+        self.max_score = 10
         self.fps = fps
         self.clock = pygame.time.Clock()
         self.running = False
@@ -31,7 +32,10 @@ class PongEngine(object):
                 'right': 0,
                 'left': 0
             },
-            'mouse_position': (0, 0),
+            'kinect': {
+                'skeleton': None,
+                'video': None
+            },
             'game_over': False
         }
 
@@ -44,6 +48,7 @@ class PongEngine(object):
         self.event_manager = EventManager()
         self.sound_manager = SoundManager()
         self.create_graphics(size)
+        self.kinect = Kinect()
 
     def create_graphics(self, (w, h)):
         """
@@ -58,9 +63,10 @@ class PongEngine(object):
 
         self.ball = Ball(self.window, self.space, self.event_manager, (w / 2, h / 2), (0, 0))
         self.elements = [
+            BackgroundDisplay(self.window, self.space, self.event_manager),
             Walls(self.window, self.space, self.event_manager),
             self.ball,
-            Paddle(self.window, self.space, self.event_manager),
+            Paddles(self.window, self.space, self.event_manager),
             ScoreDisplay(self.window, self.space, self.event_manager)
         ]
         self.ball_started = False
@@ -83,11 +89,12 @@ class PongEngine(object):
                 self.running = False
             elif event.type == KEYDOWN and event.key == K_ESCAPE:
                 self.running = False
-            elif event.type == MOUSEMOTION:
-                self.state['mouse_position'] = event.pos
             elif event.type == VIDEORESIZE:
                 if event.size != self.window.get_size():
                     self.create_graphics(event.size)
+
+    def poll_kinect(self):
+        self.state['kinect'].update(self.kinect.get_data())
 
     def push_state(self):
         """
@@ -171,24 +178,25 @@ class PongEngine(object):
         """
         log.info('Running!')
         self.running = True
-
         if debug_render:
             log.warn('Debug rendering is active')
 
-        while self.running:
-            self.process_pygame_events()
+        with self.kinect.activate():
+            while self.running:
+                self.process_pygame_events()
 
-            if not self.running:
-                return
+                if not self.running:
+                    return
 
-            if not self.ball_started:
-                self.start_ball()
+                if not self.ball_started:
+                    self.start_ball()
 
-            if not self.state['game_over']:
-                self.process_element_events()
-                self.game_status()
-                self.push_state()
-                self.update_all()
-                self.advance_physics()
-                self.render(debug_render)
-                self.tick()
+                if not self.state['game_over']:
+                    self.poll_kinect()
+                    self.process_element_events()
+                    self.game_status()
+                    self.push_state()
+                    self.update_all()
+                    self.advance_physics()
+                    self.render(debug_render)
+                    self.tick()

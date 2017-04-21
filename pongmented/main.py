@@ -22,9 +22,9 @@ def main():
     setup_pygame()
     setup_pymunk()
     game = PongEngine((1600, 800), 120)
-    game.run(debug_render=True)
+    game.run(debug_render=False)
 
 
 if __name__ == '__main__':
-    with logbook.StreamHandler(sys.stdout):
+    with logbook.StreamHandler(sys.stdout).applicationbound():
         main()
