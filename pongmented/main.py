@@ -18,13 +18,13 @@ def setup_pymunk():
 
 
 def main():
-    log.info('Starting...')
-    setup_pygame()
-    setup_pymunk()
-    game = PongEngine((1600, 800), 120)
-    game.run(debug_render=False)
+    with logbook.StreamHandler(sys.stdout).applicationbound():
+        log.info('Starting...')
+        setup_pygame()
+        setup_pymunk()
+        game = PongEngine((1600, 800), 60)
+        game.run(debug_render=False)
 
 
 if __name__ == '__main__':
-    with logbook.StreamHandler(sys.stdout).applicationbound():
-        main()
+    main()

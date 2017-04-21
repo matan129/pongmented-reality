@@ -11,7 +11,7 @@ setup(
     include_package_data=True,
     entry_points={
         'console_scripts': [
-            'run_pongmented = pongmented.game:main'
+            'run_pongmented = pongmented.main:main'
         ]
     }
 )
