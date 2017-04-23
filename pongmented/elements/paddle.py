@@ -27,11 +27,16 @@ class Paddle(GameObject):
         self.player_idx = idx
         self.space.add(self.shape, self.body)
 
+    def flip_x(self, (x, y)):
+        return self.w - x, y
+
     def update(self):
         skeleton = self.state['kinect']['skeleton']
         if skeleton is not None:
             player = skeleton[self.player_idx]
-            position = SkeletonEngine.skeleton_to_depth_image(player.SkeletonPositions[self.joint], self.w, self.h)
+            joint = player.SkeletonPositions[self.joint]
+            kinect_position = SkeletonEngine.skeleton_to_depth_image(joint, self.w, self.h)
+            position = self.flip_x(kinect_position)
 
             if position[0] <= 0 and position[1] <= 0:
                 position = OUTSIDE

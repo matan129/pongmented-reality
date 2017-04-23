@@ -19,7 +19,7 @@ def main():
     log.info('Starting...')
     setup_pygame()
     setup_pymunk()
-    game = PongEngine((640, 480), 60)
+    game = PongEngine((1024, 768), 60)
     game.run(debug_render=False)
 
 

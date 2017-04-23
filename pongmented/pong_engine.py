@@ -23,7 +23,7 @@ class PongEngine(object):
     """
 
     def __init__(self, size, fps):
-        self.max_score = 10
+        self.max_score = 10000
         self.fps = fps
         self.clock = pygame.time.Clock()
         self.running = False
