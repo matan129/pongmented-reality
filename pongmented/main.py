@@ -1,10 +1,8 @@
 import pygame
-import sys
 from pymunk import pygame_util
 
-import logbook
-from pongmented import log
 from pong_engine import PongEngine
+from pongmented import log
 
 
 def setup_pygame():
@@ -18,12 +16,11 @@ def setup_pymunk():
 
 
 def main():
-    with logbook.StreamHandler(sys.stdout).applicationbound():
-        log.info('Starting...')
-        setup_pygame()
-        setup_pymunk()
-        game = PongEngine((1600, 800), 60)
-        game.run(debug_render=False)
+    log.info('Starting...')
+    setup_pygame()
+    setup_pymunk()
+    game = PongEngine((640, 480), 60)
+    game.run(debug_render=False)
 
 
 if __name__ == '__main__':
