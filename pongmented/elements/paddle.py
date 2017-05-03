@@ -44,7 +44,7 @@ class Paddle(GameObject):
             self.body.position = position
 
     def render(self):
-        pygame.draw.circle(self.window, self.color, round_array(self.body.position), self.radius)
+        pygame.draw.circle(self.window, self.color, self.state['normalizer'].point(round_array(self.body.position)), self.radius)
 
 
 class Paddles(GameObject):

@@ -7,8 +7,9 @@ class BackgroundDisplay(GameObject):
         super(BackgroundDisplay, self).__init__(window, space, event_manager)
 
     def render(self):
+        return
         surface = self.state['kinect']['video']
         if surface:
-            # surface = pygame.transform.scale(surface, (self.w, self.h))
             surface = self.state['normalizer'].surface(surface)
+            surface = pygame.transform.flip(surface, True, False)
             self.window.blit(surface, (0, 0))

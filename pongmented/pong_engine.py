@@ -93,8 +93,11 @@ class PongEngine(object):
         for event in pygame.event.get():
             if event.type == QUIT:
                 self.running = False
-            elif event.type == KEYDOWN and event.key == K_ESCAPE:
-                self.running = False
+            elif event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    self.running = False
+                elif event.key == K_BACKSPACE:
+                    self.setup_roi()
             elif event.type == VIDEORESIZE:
                 if event.size != self.window.get_size():
                     self.create_graphics(event.size)
