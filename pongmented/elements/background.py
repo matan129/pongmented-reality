@@ -7,7 +7,6 @@ class BackgroundDisplay(GameObject):
         super(BackgroundDisplay, self).__init__(window, space, event_manager)
 
     def render(self):
-        return
         surface = self.state['kinect']['video']
         if surface:
             surface = pygame.transform.scale(surface, (self.w, self.h))

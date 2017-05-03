@@ -52,7 +52,7 @@ def image_from_frame(frame, resolution):
 class Kinect(object):
     def __init__(self):
         self.runtime = None
-        self.double_buffer = DoubleBuffer(True, ['video', 'skeleton'])
+        self.double_buffer = DoubleBuffer(False, ['video', 'skeleton'])
 
     def video_frame_ready(self, frame):
         self.double_buffer['video'] = image_from_frame(frame, VIDEO_RESOLUTION)
