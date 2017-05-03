@@ -1,4 +1,5 @@
 import numpy as np
+from coordinate_normalizer import CoordinateNormalizer
 from pygame.color import THECOLORS
 import pygame
 from pygame.locals import *
@@ -13,8 +14,8 @@ class RoiPicker(object):
         self.window = window
         self.kinect = kinect
         self.picked = False
-        self.pos_primary = np.array([0, 0])
-        self.pos_secondary = np.array(window.get_size())
+        self.pos_primary = np.array([0, 0], dtype=np.float)
+        self.pos_secondary = np.array(window.get_size(), dtype=np.float)
 
     def pick(self):
         while not self.picked:
@@ -23,7 +24,7 @@ class RoiPicker(object):
             self.draw_roi()
             pygame.display.flip()
 
-        return self.pos_primary, self.pos_secondary
+        return CoordinateNormalizer(self.pos_primary, self.pos_secondary, *self.window.get_size())
 
     def draw_roi(self):
         pygame.draw.rect(self.window, BLUE_VIOLET, Rect(self.pos_primary, self.pos_secondary - self.pos_primary), 5)
@@ -42,7 +43,7 @@ class RoiPicker(object):
                 elif event.key == K_RETURN:
                     self.picked = True
             elif event.type == MOUSEBUTTONUP:
-                pos = np.array(event.pos)
+                pos = np.array(event.pos, dtype=np.float)
                 if event.button == MOUSE_PRIMARY:
                     self.pos_primary = pos
                 elif event.button == MOUSE_SECONDARY:
