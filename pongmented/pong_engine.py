@@ -10,6 +10,7 @@ from events import EventManager, PongEvents
 from pongmented import log
 from pongmented.kinect import Kinect
 from sound import SoundManager
+from pongmented.setup import RoiPicker
 
 
 class PongEngine(object):
@@ -47,8 +48,8 @@ class PongEngine(object):
         self.ball = None
         self.event_manager = EventManager()
         self.sound_manager = SoundManager()
-        self.create_graphics(size)
         self.kinect = Kinect()
+        self.create_graphics(size)
 
     def create_graphics(self, (w, h)):
         """
@@ -70,6 +71,9 @@ class PongEngine(object):
             ScoreDisplay(self.window, self.space, self.event_manager)
         ]
         self.ball_started = False
+
+        with self.kinect.activate():
+            self.setup_roi()
 
     def start_ball(self):
         """
@@ -170,6 +174,10 @@ class PongEngine(object):
         Makes the game advance in a constant speed.
         """
         self.clock.tick(self.fps)
+
+    def setup_roi(self):
+        picker = RoiPicker(self.window, self.kinect)
+        pos1, pos2 = picker.pick()
 
     def run(self, debug_render=False):
         """

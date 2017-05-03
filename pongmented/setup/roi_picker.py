@@ -1,7 +1,5 @@
 import numpy as np
 from pygame.color import THECOLORS
-
-from pongmented.kinect import Kinect
 import pygame
 from pygame.locals import *
 
@@ -10,7 +8,7 @@ MOUSE_PRIMARY = 1
 MOUSE_SECONDARY = 3
 
 
-class Cropper(object):
+class RoiPicker(object):
     def __init__(self, window, kinect):
         self.window = window
         self.kinect = kinect
@@ -18,15 +16,14 @@ class Cropper(object):
         self.pos_primary = np.array([0, 0])
         self.pos_secondary = np.array(window.get_size())
 
-    def pick_roi(self):
-        with self.kinect.activate():
-            while not self.picked:
-                self.process_pygame_events()
-                self.draw_kinect_image(self.window)
-                self.draw_roi()
-                pygame.display.flip()
+    def pick(self):
+        while not self.picked:
+            self.process_pygame_events()
+            self.draw_kinect_image(self.window)
+            self.draw_roi()
+            pygame.display.flip()
 
-            return self.pos_primary, self.pos_secondary
+        return self.pos_primary, self.pos_secondary
 
     def draw_roi(self):
         pygame.draw.rect(self.window, BLUE_VIOLET, Rect(self.pos_primary, self.pos_secondary - self.pos_primary), 5)
@@ -50,7 +47,3 @@ class Cropper(object):
                     self.pos_primary = pos
                 elif event.button == MOUSE_SECONDARY:
                     self.pos_secondary = pos
-
-kinect_obj = Kinect()
-a = Cropper(pygame.display.set_mode((1024, 768), pygame.RESIZABLE | pygame.DOUBLEBUF), kinect_obj)
-a.pick_roi()
