@@ -20,7 +20,7 @@ class RoiPicker(object):
     def pick(self):
         while not self.picked:
             self.process_pygame_events()
-            self.draw_kinect_image(self.window)
+            self.draw_kinect_image()
             self.draw_roi()
             pygame.display.flip()
 
@@ -29,11 +29,11 @@ class RoiPicker(object):
     def draw_roi(self):
         pygame.draw.rect(self.window, BLUE_VIOLET, Rect(self.pos_primary, self.pos_secondary - self.pos_primary), 5)
 
-    def draw_kinect_image(self, window):
+    def draw_kinect_image(self):
         surface = self.kinect.get_data().get("video")
         if surface:
-            surface = pygame.transform.scale(surface, window.get_size())
-            window.blit(surface, (0, 0))
+            surface = pygame.transform.scale(surface, self.window.get_size())
+            self.window.blit(surface, (0, 0))
 
     def process_pygame_events(self):
         for event in pygame.event.get():

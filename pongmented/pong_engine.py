@@ -28,7 +28,6 @@ class PongEngine(object):
         self.fps = fps
         self.clock = pygame.time.Clock()
         self.running = False
-        self.normalizer = None
         self.state = {
             'score': {
                 'right': 0,
@@ -39,7 +38,7 @@ class PongEngine(object):
                 'video': None
             },
             'game_over': False,
-            'normalizer': self.normalizer
+            'normalizer': None
         }
 
         self.ball_started = False
@@ -181,9 +180,7 @@ class PongEngine(object):
         self.clock.tick(self.fps)
 
     def setup_roi(self):
-        picker = RoiPicker(self.window, self.kinect)
-        self.normalizer = picker.pick()
-        self.state['normalizer'] = self.normalizer
+        self.state['normalizer'] = RoiPicker(self.window, self.kinect).pick()
 
     def run(self, debug_render=False):
         """
