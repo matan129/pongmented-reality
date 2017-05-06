@@ -10,7 +10,7 @@ from events import EventManager, PongEvents
 from pongmented import log
 from pongmented.kinect import Kinect
 from sound import SoundManager
-from pongmented.setup import RoiPicker
+from pongmented.roi import RoiPicker
 
 
 class PongEngine(object):
@@ -23,8 +23,8 @@ class PongEngine(object):
     Also, it holds a global game state that is propagated to the elements each iteration.
     """
 
-    def __init__(self, size, fps):
-        self.max_score = 10000
+    def __init__(self, size, fps, max_score, debug_render, background_render, sound_enabled):
+        self.max_score = max_score
         self.fps = fps
         self.clock = pygame.time.Clock()
         self.running = False
@@ -38,7 +38,10 @@ class PongEngine(object):
                 'video': None
             },
             'game_over': False,
-            'normalizer': None
+            'normalizer': None,
+            'debug_render': debug_render,
+            'background_render': background_render,
+            'sound': sound_enabled,
         }
 
         self.ball_started = False
@@ -157,17 +160,16 @@ class PongEngine(object):
         right = self.state['score']['right']
         self.state['game_over'] = left == self.max_score or right == self.max_score
 
-    def render(self, debug):
+    def render(self):
         """
         Clears the screen and renders all the elements.
-        :param debug: If true, pymunk will draw some debugging data on top of the normal render.
         """
         self.window.fill(THECOLORS['black'])
 
         for element in self.elements:
             element.render()
 
-        if debug and not self.state['game_over']:
+        if self.state['debug_render'] and not self.state['game_over']:
             self.space.debug_draw(self.pymunk_debug_draw_options)
 
         pygame.display.flip()
@@ -182,15 +184,12 @@ class PongEngine(object):
     def setup_roi(self):
         self.state['normalizer'] = RoiPicker(self.window, self.kinect).pick()
 
-    def run(self, debug_render=False):
+    def run(self):
         """
         Runs the game in a loop.
-        :param debug_render: See `~render`.
         """
         log.info('Running!')
         self.running = True
-        if debug_render:
-            log.warn('Debug rendering is active')
 
         with self.kinect.activate():
             while self.running:
@@ -209,5 +208,5 @@ class PongEngine(object):
                     self.push_state()
                     self.update_all()
                     self.advance_physics()
-                    self.render(debug_render)
+                    self.render()
                     self.tick()

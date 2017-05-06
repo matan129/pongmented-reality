@@ -7,7 +7,9 @@ class BackgroundDisplay(GameObject):
         super(BackgroundDisplay, self).__init__(window, space, event_manager)
 
     def render(self):
-        return
+        if not self.state['background_render']:
+            return
+
         surface = self.state['kinect']['video']
         if surface:
             surface = self.state['normalizer'].surface(surface)

@@ -1,3 +1,4 @@
+import click
 import pygame
 from pymunk import pygame_util
 
@@ -15,13 +16,17 @@ def setup_pymunk():
     pygame_util.positive_y_is_up = False  # Makes the pymunk and pygame axis systems the same
 
 
-def main():
+@click.command()
+@click.option('--width', '-w', default=1024, help='Screen width')
+@click.option('--height', '-h', default=768, help='Screen height')
+@click.option('--fps', '-f', default=30, help='FPS')
+@click.option('--debug-render', '-d', default=False, help='Enable Pymunk debug rendering', is_flag=True)
+@click.option('--background-render', '-b', default=False, help='Enable rendering the captured video', is_flag=True)
+@click.option('--sound/--no-sound', default=True, help='Enable/disable in-game sound')
+@click.option('--max-score', '-m', default=4, help='The max game score')
+def main(width, height, fps, debug_render, background_render, sound, max_score):
     log.info('Starting...')
     setup_pygame()
     setup_pymunk()
-    game = PongEngine((1024, 768), 60)
-    game.run(debug_render=False)
-
-
-if __name__ == '__main__':
-    main()
+    game = PongEngine((width, height), fps, max_score, debug_render, background_render, sound)
+    game.run(debug_render)
