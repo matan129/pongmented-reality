@@ -17,7 +17,7 @@ class Paddle(GameObject):
     def __init__(self, window, space, event_manager, idx, joint):
         super(Paddle, self).__init__(window, space, event_manager)
         self.joint = joint
-        self.radius = 80
+        self.radius = 30
         self.color = THECOLORS['blue']
         self.body = pymunk.Body(body_type=pymunk.Body.KINEMATIC)
         self.body.velocity_func = constant_velocity(0)

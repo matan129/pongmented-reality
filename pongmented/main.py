@@ -29,4 +29,8 @@ def main(width, height, fps, debug_render, background_render, sound, max_score):
     setup_pygame()
     setup_pymunk()
     game = PongEngine((width, height), fps, max_score, debug_render, background_render, sound)
-    game.run(debug_render)
+    game.run()
+
+
+if __name__ == '__main__':
+    main()
