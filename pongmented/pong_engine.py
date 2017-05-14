@@ -23,7 +23,8 @@ class PongEngine(object):
     Also, it holds a global game state that is propagated to the elements each iteration.
     """
 
-    def __init__(self, size, fps, max_score, debug_render, background_render, sound_enabled):
+    def __init__(self, size, fps, max_score, debug_render, background_render, sound_enabled, slowdown_factor):
+        self.slowdown_factor = slowdown_factor
         self.max_score = max_score
         self.fps = fps
         self.clock = pygame.time.Clock()
@@ -100,6 +101,13 @@ class PongEngine(object):
                     self.running = False
                 elif event.key == K_BACKSPACE:
                     self.setup_roi()
+                elif event.key == K_SPACE:
+                    with open(r"C:\Users\Matan Rosenberg\Documents\conf.txt") as f:
+                        line = f.readlines()[0]
+                        a, b = [int(i) for i in line.split(',')]
+                        self.state['normalizer'].tweak1 = a
+                        self.state['normalizer'].tweak2 = b
+                        log.info('Tweaks loaded: {}, {}', a, b)
             elif event.type == VIDEORESIZE:
                 if event.size != self.window.get_size():
                     self.create_graphics(event.size)
@@ -125,7 +133,7 @@ class PongEngine(object):
         """
         Advances the simulation a little bit.
         """
-        self.space.step(1.0 / self.fps)
+        self.space.step(1.0 / self.fps / self.slowdown_factor)
 
     def process_element_events(self):
         """

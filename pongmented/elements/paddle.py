@@ -51,6 +51,7 @@ class Paddles(GameObject):
     def __init__(self, window, space, event_manager, player_count=6):
         super(Paddles, self).__init__(window, space, event_manager)
         self.p = [Paddle(window, space, event_manager, i, JointId.HandLeft) for i in xrange(player_count)]
+        self.p.extend([Paddle(window, space, event_manager, i, JointId.HandRight) for i in xrange(player_count)])
 
     def update(self):
         for p in self.p:

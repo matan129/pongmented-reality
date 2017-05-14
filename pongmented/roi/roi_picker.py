@@ -30,7 +30,7 @@ class RoiPicker(object):
         pygame.draw.rect(self.window, BLUE_VIOLET, Rect(self.pos_primary, self.pos_secondary - self.pos_primary), 5)
 
     def draw_kinect_image(self):
-        surface = self.kinect.get_data().get("video")
+        surface = self.kinect.get_data().get('video')
         if surface:
             surface = pygame.transform.scale(surface, self.window.get_size())
             self.window.blit(surface, (0, 0))

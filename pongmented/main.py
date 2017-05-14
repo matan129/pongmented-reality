@@ -24,11 +24,12 @@ def setup_pymunk():
 @click.option('--background-render', '-b', default=False, help='Enable rendering the captured video', is_flag=True)
 @click.option('--sound/--no-sound', default=True, help='Enable/disable in-game sound')
 @click.option('--max-score', '-m', default=4, help='The max game score')
-def main(width, height, fps, debug_render, background_render, sound, max_score):
+@click.option('--slowdown', '-s', default=1.0, help='Slowdown coefficient')
+def main(width, height, fps, debug_render, background_render, sound, max_score, slowdown):
     log.info('Starting...')
     setup_pygame()
     setup_pymunk()
-    game = PongEngine((width, height), fps, max_score, debug_render, background_render, sound)
+    game = PongEngine((width, height), fps, max_score, debug_render, background_render, sound, slowdown)
     game.run()
 
 

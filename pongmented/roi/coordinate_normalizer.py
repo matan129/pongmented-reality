@@ -6,6 +6,7 @@ class CoordinateNormalizer(object):
     def __init__(self, pos1, pos2, width, height):
         self.pos1 = pos1
         self.pos2 = pos2
+        self.tweak1, self.tweak2 = 0, 0
         self.w = width
         self.h = height
 
@@ -22,4 +23,4 @@ class CoordinateNormalizer(object):
         off_y = point[1] - self.pos1[1]
         ratio_y = self.h / (self.pos2[1] - self.pos1[1])
         norm_y = int(off_y * ratio_y)
-        return norm_x, norm_y
+        return norm_x + self.tweak1, norm_y + self.tweak2

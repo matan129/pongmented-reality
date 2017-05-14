@@ -35,7 +35,7 @@ class Ball(GameObject):
     def set_body_params(self, position, velocity):
         self.body.position = position
         self.body.velocity = velocity
-        self.body.apply_impulse_at_local_point(velocity)
+        # self.body.apply_impulse_at_local_point(velocity)
 
     def render(self):
         pygame.draw.circle(self.window, self.color, round_array(self.body.position), self.radius)
