@@ -1,3 +1,4 @@
+import sys
 import click
 import pygame
 from pymunk import pygame_util
@@ -34,4 +35,4 @@ def main(width, height, fps, debug_render, background_render, sound, max_score, 
 
 
 if __name__ == '__main__':
-    main()
+    main(sys.argv[1:])

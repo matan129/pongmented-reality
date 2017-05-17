@@ -14,10 +14,10 @@ class Paddle(GameObject):
     """
     Mouse-controlled paddle.
     """
-    def __init__(self, window, space, event_manager, idx, joint):
+    def __init__(self, window, space, event_manager, idx, joint, radius):
         super(Paddle, self).__init__(window, space, event_manager)
         self.joint = joint
-        self.radius = 30
+        self.radius = radius
         self.color = THECOLORS['blue']
         self.body = pymunk.Body(body_type=pymunk.Body.KINEMATIC)
         self.body.velocity_func = constant_velocity(0)
@@ -50,8 +50,9 @@ class Paddle(GameObject):
 class Paddles(GameObject):
     def __init__(self, window, space, event_manager, player_count=6):
         super(Paddles, self).__init__(window, space, event_manager)
-        self.p = [Paddle(window, space, event_manager, i, JointId.HandLeft) for i in xrange(player_count)]
-        self.p.extend([Paddle(window, space, event_manager, i, JointId.HandRight) for i in xrange(player_count)])
+        self.p = [Paddle(window, space, event_manager, i, JointId.Spine, 120) for i in xrange(player_count)]
+        self.p.extend([Paddle(window, space, event_manager, i, JointId.HandLeft, 30) for i in xrange(player_count)])
+        self.p.extend([Paddle(window, space, event_manager, i, JointId.HandRight, 30) for i in xrange(player_count)])
 
     def update(self):
         for p in self.p:

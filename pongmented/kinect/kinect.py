@@ -58,6 +58,7 @@ class Kinect(object):
         self.double_buffer['video'] = image_from_frame(frame, VIDEO_RESOLUTION)
 
     def post_skeleton(self, frame):
+        log.debug('Got kinect')
         self.double_buffer['skeleton'] = frame.SkeletonData
 
     def get_data(self):
