@@ -5,6 +5,14 @@ import cv2
 import numpy as np
 
 
+ERODE_KERNEL = np.ones((5,5), np.uint8)
+
+
+def erode(img):
+    t = cv2.erode(img, ERODE_KERNEL, iterations=1)
+    return cv2.dilate(t, ERODE_KERNEL, iterations=1)
+
+
 class BackgroundDisplay(GameObject):
     def __init__(self, window, space, event_manager):
         super(BackgroundDisplay, self).__init__(window, space, event_manager)
@@ -26,6 +34,8 @@ class BackgroundDisplay(GameObject):
         br = cv2.bitwise_or(r, b)
         br = cv2.bitwise_not(br)
         g = cv2.bitwise_and(br, g)
+
+        g = erode(g)
 
         img = cv2.merge((g, g, g))
         surface = cv2_to_pygame(img)
