@@ -1,6 +1,9 @@
 import pygame
 from game_object import GameObject
 
+import cv2
+import numpy as np
+
 
 class BackgroundDisplay(GameObject):
     def __init__(self, window, space, event_manager):
@@ -10,8 +13,28 @@ class BackgroundDisplay(GameObject):
         if not self.state['background_render']:
             return
 
-        surface = self.state['kinect']['video']
+        img = self.state['kinect']['video']
+
+        if img is None:
+            return
+
+        r, g, b = cv2.split(img)
+        _, r = cv2.threshold(r, 220, 255, cv2.THRESH_BINARY)
+        _, g = cv2.threshold(g, 220, 255, cv2.THRESH_BINARY)
+        _, b = cv2.threshold(b, 220, 255, cv2.THRESH_BINARY)
+
+        br = cv2.bitwise_or(r, b)
+        br = cv2.bitwise_not(br)
+        g = cv2.bitwise_and(br, g)
+
+        img = cv2.merge((g, g, g))
+        surface = cv2_to_pygame(img)
+
         if surface:
             surface = self.state['normalizer'].surface(surface)
             surface = pygame.transform.flip(surface, True, False)
             self.window.blit(surface, (0, 0))
+
+
+def cv2_to_pygame(img):
+    return pygame.image.frombuffer(img.tostring(), img.shape[1::-1], 'RGB')

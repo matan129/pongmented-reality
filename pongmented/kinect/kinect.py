@@ -9,44 +9,28 @@ from pykinect.nui import JointId, ImageStreamType, ImageResolution, ImageType
 from pongmented import log
 from pongmented.kinect.double_buffer import DoubleBuffer
 
+import cv2
+import numpy as np
+
+
 VIDEO_RESOLUTION = 640, 480
-
-
-LEFT_ARM = (JointId.ShoulderCenter,
-            JointId.ShoulderLeft,
-            JointId.ElbowLeft,
-            JointId.WristLeft,
-            JointId.HandLeft)
-
-RIGHT_ARM = (JointId.ShoulderCenter,
-             JointId.ShoulderRight,
-             JointId.ElbowRight,
-             JointId.WristRight,
-             JointId.HandRight)
-
-LEFT_LEG = (JointId.HipCenter,
-            JointId.HipLeft,
-            JointId.KneeLeft,
-            JointId.AnkleLeft,
-            JointId.FootLeft)
-
-RIGHT_LEG = (JointId.HipCenter,
-             JointId.HipRight,
-             JointId.KneeRight,
-             JointId.AnkleRight,
-             JointId.FootRight)
-
-SPINE = (JointId.HipCenter,
-         JointId.Spine,
-         JointId.ShoulderCenter,
-         JointId.Head)
 
 
 def image_from_frame(frame, resolution):
     image = Image.frombytes('RGBA', resolution, buffer(frame.image.bits), 'raw', 'BGRA')
     fp = io.BytesIO()
     image.save(fp, 'bmp')
-    return pygame.image.load_basic(io.BytesIO(fp.getvalue()))
+    # return pygame.image.load_basic(io.BytesIO(fp.getvalue()))
+    return cv2dec(toarr(fp))
+
+
+def toarr(fp):
+    fp.seek(0)
+    return np.asarray(bytearray(fp.read()), dtype=np.uint8)
+
+
+def cv2dec(arr, flags=cv2.IMREAD_COLOR):
+    return cv2.imdecode(arr, flags)
 
 
 class Kinect(object):
@@ -67,8 +51,6 @@ class Kinect(object):
     def start(self):
         log.info('Starting Kinect...')
         self.runtime = pykinect.nui.Runtime()
-        self.runtime.skeleton_engine.enabled = True
-        self.runtime.skeleton_frame_ready += self.post_skeleton
         self.runtime.video_frame_ready += self.video_frame_ready
         self.runtime.video_stream.open(ImageStreamType.Video, 2, ImageResolution.Resolution640x480, ImageType.Color)
 
