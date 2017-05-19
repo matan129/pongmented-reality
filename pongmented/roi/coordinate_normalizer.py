@@ -10,11 +10,22 @@ class CoordinateNormalizer(object):
         self.pos2 = pos2
         self.w = width
         self.h = height
+        self.orig_w = 640
+        self.orig_h = 480
 
     def surface(self, surface):
-        return pygame.transform.scale(surface, (self.w, self.h))
+        scaled = pygame.transform.scale(surface, (self.w, self.h))
+        cropped = scaled.subsurface(Rect(self.pos1, self.pos2 - self.pos1))
+        return pygame.transform.scale(cropped, (self.w, self.h))
 
-    def point(self, point):
+    def point(self, base_point):
+        ratio_x_orig = self.w / float(self.orig_w)
+        ratio_y_orig = self.h / float(self.orig_h)
+
+        point = [0, 0]
+        point[0] = base_point[0] * ratio_x_orig
+        point[1] = base_point[1] * ratio_y_orig
+
         off_x = point[0] - self.pos1[0]
         ratio_x = self.w / (self.pos2[0] - self.pos1[0])
         norm_x = int(off_x * ratio_x)

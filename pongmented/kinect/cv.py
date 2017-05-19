@@ -5,10 +5,10 @@ import pygame
 from numpy import uint8
 from hashable import Hashable
 
-MIN_THRESH = 240
+MIN_THRESH = 230
 MAX_BRIGHTNESS = 255
 CHAIN_RADIUS = 100
-AREA_THRESHOLD = 140
+AREA_THRESHOLD = 50
 ONES_KERNEL = np.ones((3, 3), np.uint8)
 
 
@@ -31,10 +31,6 @@ def draw_convex(contour, h, img):
 
 
 def get_contour_center(contour):
-    # avg = np.average(contour, axis=1)
-    # x = int(round(avg[0, 0]))
-    # y = int(round(avg[0, 1]))
-    # return x, y
     m = cv2.moments(contour)
     cx = int(m['m10'] / m['m00'])
     cy = int(m['m01'] / m['m00'])
@@ -134,6 +130,12 @@ def thresh_white(img):
 def thresh_green(img):
     b, g, r = thresh_channels(img)
     g = cv2.bitwise_and(cv2.bitwise_not(cv2.bitwise_or(r, b)), g)
+    return g
+
+
+def thresh_red(img):
+    b, g, r = thresh_channels(img)
+    g = cv2.bitwise_and(cv2.bitwise_not(cv2.bitwise_or(b, g)), r)
     return g
 
 

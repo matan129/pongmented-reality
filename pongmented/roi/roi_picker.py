@@ -36,7 +36,7 @@ class RoiPicker(object):
             self.draw_roi()
             pygame.display.flip()
 
-        return CoordinateNormalizer(self.pos_primary, (640, 480), *self.window_size)
+        return CoordinateNormalizer(self.pos_primary, self.pos_secondary, *self.window_size)
 
     def display_initial(self):
         self.window.fill(THECOLORS['green'])
