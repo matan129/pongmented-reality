@@ -8,7 +8,7 @@ from hashable import Hashable
 MIN_THRESH = 240
 MAX_BRIGHTNESS = 255
 CHAIN_RADIUS = 100
-AREA_THRESHOLD = 180
+AREA_THRESHOLD = 140
 ONES_KERNEL = np.ones((3, 3), np.uint8)
 
 
@@ -30,11 +30,15 @@ def draw_convex(contour, h, img):
         cv2.line(img, start, end, [0, 255, 0], 2)
 
 
-def get_contour_center(cnt):
-    avg = np.mean(cnt, axis=1)
-    x = int(round(avg[0, 0]))
-    y = int(round(avg[0, 1]))
-    return x, y
+def get_contour_center(contour):
+    # avg = np.average(contour, axis=1)
+    # x = int(round(avg[0, 0]))
+    # y = int(round(avg[0, 1]))
+    # return x, y
+    m = cv2.moments(contour)
+    cx = int(m['m10'] / m['m00'])
+    cy = int(m['m01'] / m['m00'])
+    return cx, cy
 
 
 def to_array(fp):
@@ -97,7 +101,7 @@ def find_contours(threshed_channel, img):
     centers_to_areas = {}
     for contour in contours:
         convex = cv2.convexHull(contour, returnPoints=False)
-        area = cv2.contourArea(cv2.approxPolyDP(contour, 0.01, True))
+        area = cv2.contourArea(cv2.approxPolyDP(contour, 1, True))
 
         if area >= AREA_THRESHOLD:
             draw_convex(contour, convex, img)
