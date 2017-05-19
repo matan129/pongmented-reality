@@ -12,9 +12,7 @@ class CoordinateNormalizer(object):
         self.h = height
 
     def surface(self, surface):
-        scaled = pygame.transform.scale(surface, (self.w, self.h))
-        cropped = scaled.subsurface(Rect(self.pos1, self.pos2 - self.pos1))
-        return pygame.transform.scale(cropped, (self.w, self.h))
+        return pygame.transform.scale(surface, (self.w, self.h))
 
     def point(self, point):
         off_x = point[0] - self.pos1[0]

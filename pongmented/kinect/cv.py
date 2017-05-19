@@ -109,7 +109,7 @@ def find_contours(threshed_channel, img):
 
 
 def detect_players(img):
-    g = thresh_green(img)
+    g = thresh_white(img)
     g = reduce_noise(g)
 
     img = cv2.merge((g, g, g))

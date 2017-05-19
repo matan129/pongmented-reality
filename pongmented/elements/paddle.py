@@ -30,11 +30,10 @@ class Paddle(GameObject):
             else:
                 position = OUTSIDE
 
-            self.body.position = position
+            self.body.position = self.state['normalizer'].point(round_array(position))
 
     def render(self):
-        position = self.state['normalizer'].point(round_array(self.body.position))
-        pygame.draw.circle(self.window, self.color, position, self.radius)
+        pygame.draw.circle(self.window, self.color, round_array(self.body.position), self.radius)
 
 
 class Paddles(GameObject):
