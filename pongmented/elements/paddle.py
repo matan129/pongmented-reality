@@ -1,44 +1,36 @@
 import pygame
 import pymunk
 from pygame.color import THECOLORS
-from pykinect.nui import JointId
 
 from common import setup_elasticity, round_array, CollisionTypes, constant_velocity
 from game_object import GameObject
-from pykinect.nui import SkeletonEngine
 
 OUTSIDE = (-100, -100)
 
 
 class Paddle(GameObject):
-    """
-    Mouse-controlled paddle.
-    """
-    def __init__(self, window, space, event_manager, idx, joint, radius):
+
+    def __init__(self, window, space, event_manager, idx, radius):
         super(Paddle, self).__init__(window, space, event_manager)
-        self.joint = joint
         self.radius = radius
+        self.idx = idx
         self.color = THECOLORS['blue']
         self.body = pymunk.Body(body_type=pymunk.Body.KINEMATIC)
         self.body.velocity_func = constant_velocity(0)
         self.body.position = OUTSIDE
         self.shape = setup_elasticity(pymunk.Circle(self.body, self.radius))
         self.shape.collision_type = CollisionTypes.PADDLE
-        self.player_idx = idx
         self.space.add(self.shape, self.body)
 
     def flip_x(self, (x, y)):
         return self.w - x, y
 
     def update(self):
-        skeleton = self.state['kinect']['skeleton']
-        if skeleton is not None:
-            player = skeleton[self.player_idx]
-            joint = player.SkeletonPositions[self.joint]
-            kinect_position = SkeletonEngine.skeleton_to_depth_image(joint, self.w, self.h)
-            position = self.flip_x(kinect_position)
-
-            if position[0] <= 0 and position[1] <= 0:
+        positions = self.state['kinect']['skeleton']
+        if positions is not None:
+            if len(positions) > self.idx:
+                position = self.flip_x(positions[self.idx])
+            else:
                 position = OUTSIDE
 
             self.body.position = position
@@ -50,9 +42,9 @@ class Paddle(GameObject):
 class Paddles(GameObject):
     def __init__(self, window, space, event_manager, player_count=6):
         super(Paddles, self).__init__(window, space, event_manager)
-        self.p = [Paddle(window, space, event_manager, i, JointId.Spine, 120) for i in xrange(player_count)]
-        self.p.extend([Paddle(window, space, event_manager, i, JointId.HandLeft, 30) for i in xrange(player_count)])
-        self.p.extend([Paddle(window, space, event_manager, i, JointId.HandRight, 30) for i in xrange(player_count)])
+        self.p = []
+        for i in xrange(4):
+            self.p.append(Paddle(window, space, event_manager, i, 30))
 
     def update(self):
         for p in self.p:
