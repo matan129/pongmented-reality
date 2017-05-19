@@ -67,9 +67,9 @@ def distance(contour_center, other_center):
 
 def thresh_channels(img):
     r, g, b = cv2.split(img)
-    _, r = cv2.threshold(r, MIN_THRESH, MAX_BRIGHTNESS, cv2.THRESH_BINARY_INV)
+    _, r = cv2.threshold(r, MIN_THRESH, MAX_BRIGHTNESS, cv2.THRESH_BINARY)
     _, g = cv2.threshold(g, MIN_THRESH, MAX_BRIGHTNESS, cv2.THRESH_BINARY)
-    _, b = cv2.threshold(b, MIN_THRESH, MAX_BRIGHTNESS, cv2.THRESH_BINARY_INV)
+    _, b = cv2.threshold(b, MIN_THRESH, MAX_BRIGHTNESS, cv2.THRESH_BINARY)
     return b, g, r
 
 
@@ -121,9 +121,15 @@ def detect_players(img):
     return cv2_to_pygame(img), np.array(avg_positions)
 
 
+def thresh_white(img):
+    b, g, r = thresh_channels(img)
+    g = cv2.bitwise_and(cv2.bitwise_and(r, b), g)
+    return g
+
+
 def thresh_green(img):
     b, g, r = thresh_channels(img)
-    g = cv2.bitwise_and(cv2.bitwise_or(r, b), g)
+    g = cv2.bitwise_and(cv2.bitwise_not(cv2.bitwise_or(r, b)), g)
     return g
 
 
