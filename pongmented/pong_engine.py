@@ -144,17 +144,19 @@ class PongEngine(object):
         """
         for event in self.event_manager:
             if event == PongEvents.FRAME_HIT:
-                self.sound_manager.hit_sound.play()
+                # self.sound_manager.hit_sound.play()
+                pass
             elif event == PongEvents.LEFT_WALL_HIT:
                 self.state['score']['right'] += 1
-                self.sound_manager.goal_sound.play()
+                # self.sound_manager.goal_sound.play()
                 self.start_ball()
             elif event == PongEvents.RIGHT_WALL_HIT:
                 self.state['score']['left'] += 1
-                self.sound_manager.goal_sound.play()
+                # self.sound_manager.goal_sound.play()
                 self.start_ball()
             elif event == PongEvents.BALL_PADDLE_HIT:
-                self.sound_manager.hit_sound.play()
+                # self.sound_manager.hit_sound.play()
+                pass
             else:
                 log.warn('Unknown event: {}', event)
 
