@@ -1,4 +1,5 @@
 from game_object import GameObject
+from pongmented import log
 
 
 class BackgroundDisplay(GameObject):
@@ -12,7 +13,10 @@ class BackgroundDisplay(GameObject):
         surface = self.state['kinect']['video']
 
         if surface is None:
+            log.warn('Got no surface!')
             return
+        else:
+            log.trace('Got surface')
 
         if surface:
             surface = self.state['normalizer'].surface(surface)

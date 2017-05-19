@@ -22,21 +22,19 @@ class Paddle(GameObject):
         self.shape.collision_type = CollisionTypes.PADDLE
         self.space.add(self.shape, self.body)
 
-    def flip_x(self, (x, y)):
-        return self.w - x, y
-
     def update(self):
         positions = self.state['kinect']['skeleton']
         if positions is not None:
             if len(positions) > self.idx:
-                position = self.flip_x(positions[self.idx])
+                position = positions[self.idx]
             else:
                 position = OUTSIDE
 
             self.body.position = position
 
     def render(self):
-        pygame.draw.circle(self.window, self.color, self.state['normalizer'].point(round_array(self.body.position)), self.radius)
+        position = self.state['normalizer'].point(round_array(self.body.position))
+        pygame.draw.circle(self.window, self.color, position, self.radius)
 
 
 class Paddles(GameObject):

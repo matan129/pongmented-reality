@@ -21,16 +21,15 @@ class RoiPicker(object):
         self.window_size = window.get_size()
 
     def pick(self):
-        #
-        # while not self.picked:
-        #     self.display_initial()
-        #
-        #     if self.kinect_surface:
-        #         self.window.blit(self.kinect_surface, (0, 0))
-        #
-        #     self.process_pygame_events()
-        #     self.draw_roi()
-        #     pygame.display.flip()
+        while not self.picked:
+            self.display_initial()
+
+            if self.kinect_surface:
+                self.window.blit(self.kinect_surface, (0, 0))
+
+            self.process_pygame_events()
+            self.draw_roi()
+            pygame.display.flip()
 
         return CoordinateNormalizer(self.pos_primary, self.pos_secondary, *self.window_size)
 
@@ -43,7 +42,7 @@ class RoiPicker(object):
     def acquire_kinect_image(self):
         surface = None
         while not surface:
-            surface = self.kinect.get_data().get('video')
+            surface = self.kinect.get_data().get('raw_video')
 
         surface = pygame.transform.scale(surface, self.window_size)
         self.kinect_surface = surface

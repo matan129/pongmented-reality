@@ -77,8 +77,8 @@ class PongEngine(object):
         ]
         self.ball_started = False
 
-        # with self.kinect.activate():
-        self.setup_roi()
+        with self.kinect.activate():
+            self.setup_roi()
 
     def start_ball(self):
         """
