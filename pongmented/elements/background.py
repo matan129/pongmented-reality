@@ -15,8 +15,6 @@ class BackgroundDisplay(GameObject):
         if surface is None:
             log.warn('Got no surface!')
             return
-        else:
-            log.trace('Got surface')
 
         if surface:
             surface = self.state['normalizer'].surface(surface)

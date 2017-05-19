@@ -77,9 +77,6 @@ class PongEngine(object):
         ]
         self.ball_started = False
 
-        with self.kinect.activate():
-            self.setup_roi()
-
     def start_ball(self):
         """
         Resets the ball to the middle of the field and gives it a random starting vector.
@@ -202,6 +199,8 @@ class PongEngine(object):
         self.running = True
 
         with self.kinect.activate():
+            self.setup_roi()
+
             while self.running:
                 self.process_pygame_events()
 

@@ -38,10 +38,10 @@ class Paddle(GameObject):
 
 
 class Paddles(GameObject):
-    def __init__(self, window, space, event_manager, limbs_count=4, radius=30):
+    def __init__(self, window, space, event_manager, limb_count=4, radius=30):
         super(Paddles, self).__init__(window, space, event_manager)
         self.p = []
-        for i in xrange(limbs_count):
+        for i in xrange(limb_count):
             self.p.append(Paddle(window, space, event_manager, i, radius))
 
     def update(self):

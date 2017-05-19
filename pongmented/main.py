@@ -1,5 +1,6 @@
 import sys
 import click
+import ctypes
 import pygame
 from pymunk import pygame_util
 
@@ -8,6 +9,7 @@ from pongmented import log
 
 
 def setup_pygame():
+    ctypes.windll.user32.SetProcessDPIAware()
     pygame.mixer.pre_init(44100, -16, 1, 512)  # Solves sound delay problems
     pygame.init()
     pygame.display.set_caption('PONGmented Reality')

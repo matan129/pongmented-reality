@@ -7,7 +7,7 @@ from PIL import Image
 from pykinect.nui import ImageStreamType, ImageResolution, ImageType
 
 from pongmented import log
-from pongmented.kinect.cv import detect_from_bmp
+from cv import detect_from_bmp
 
 VIDEO_RESOLUTION = 640, 480
 

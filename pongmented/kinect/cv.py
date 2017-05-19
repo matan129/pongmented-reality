@@ -93,7 +93,7 @@ def find_all_chains(centers_to_areas):
 
 
 def find_contours(threshed_channel, img):
-    _, contours, _ = cv2.findContours(threshed_channel, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    _, contours, _ = cv2.findContours(threshed_channel, cv2.RETR_LIST, cv2.CHAIN_APPROX_TC89_KCOS)
     centers_to_areas = {}
     for contour in contours:
         convex = cv2.convexHull(contour, returnPoints=False)
