@@ -1,1 +1,1 @@
-from log import log
+from logger import log

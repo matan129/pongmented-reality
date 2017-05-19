@@ -138,3 +138,7 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 .idea
+Include
+Scripts
+pip-selfcheck.json
+tcl
