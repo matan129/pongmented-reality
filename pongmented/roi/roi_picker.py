@@ -5,6 +5,7 @@ import pygame
 from pygame.locals import *
 import os
 import json
+from pongmented import log
 
 CONF_DIR = os.path.join(os.getenv('LOCALAPPDATA'), 'pongmented')
 
@@ -30,6 +31,9 @@ class RoiPicker(object):
 
         if os.path.exists(self.CONF_FILE):
             self.load_settings()
+
+        if self.window_size != self.window.get_size():
+            self.window = pygame.display.set_mode(self.window_size, pygame.RESIZABLE | pygame.DOUBLEBUF)
 
     def reset_pos(self):
         self.pos_primary = np.array([0, 0], dtype=np.float)
@@ -69,7 +73,7 @@ class RoiPicker(object):
                 self.pos_secondary = pos_secondary
                 self.window_size = window_size
         except (ValueError, KeyError):
-            pass
+            log.exception('Skipping ROI restoration')
 
     def display_initial(self):
         self.window.fill(THECOLORS['green'])

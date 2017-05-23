@@ -16,7 +16,7 @@ class Walls(GameObject):
     def __init__(self, window, space, event_manager):
         super(Walls, self).__init__(window, space, event_manager)
         self.stroke = 10
-        self.color = THECOLORS['gray20']
+        self.color = THECOLORS['beige']
         self.walls = [
             self.create_wall((0, 0), (self.w, 0), CollisionTypes.FRAME, PongEvents.FRAME_HIT),
             self.create_wall((0, self.h), (self.w, self.h), CollisionTypes.FRAME, PongEvents.FRAME_HIT),

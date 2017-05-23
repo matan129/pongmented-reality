@@ -189,7 +189,9 @@ class PongEngine(object):
         self.clock.tick(self.fps)
 
     def setup_roi(self):
-        self.state['normalizer'] = RoiPicker(self.window, self.kinect).pick()
+        picker = RoiPicker(self.window, self.kinect)
+        self.window = picker.window
+        self.state['normalizer'] = picker.pick()
 
     def run(self):
         """
