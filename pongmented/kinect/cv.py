@@ -58,7 +58,7 @@ def distance(a, b):
 
 
 def min_contour_distance(contour_data_a, contour_data_b):
-    return distance(contour_data_a.center, contour_data_b.center)
+    # return distance(contour_data_a.center, contour_data_b.center)
     min_dist = None
 
     for ap in contour_data_a.poly:
