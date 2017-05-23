@@ -105,6 +105,14 @@ class PongEngine(object):
                         self.state['normalizer'].tweak1 = a
                         self.state['normalizer'].tweak2 = b
                         log.info('Tweaks loaded: {}, {}', a, b)
+                elif event.key == K_r:
+                    log.info('Restarting game session')
+                    self.state['score'] = {
+                        'right': 0,
+                        'left': 0
+                    }
+                    self.state['game_over'] = False
+                    self.ball_started = False
             elif event.type == VIDEORESIZE:
                 if event.size != self.window.get_size():
                     self.create_graphics(event.size)
