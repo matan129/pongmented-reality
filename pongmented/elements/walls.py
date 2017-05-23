@@ -16,7 +16,7 @@ class Walls(GameObject):
     def __init__(self, window, space, event_manager):
         super(Walls, self).__init__(window, space, event_manager)
         self.stroke = 10
-        self.color = THECOLORS['lightgray']
+        self.color = THECOLORS['gray20']
         self.walls = [
             self.create_wall((0, 0), (self.w, 0), CollisionTypes.FRAME, PongEvents.FRAME_HIT),
             self.create_wall((0, self.h), (self.w, self.h), CollisionTypes.FRAME, PongEvents.FRAME_HIT),
@@ -41,3 +41,5 @@ class Walls(GameObject):
     def render(self):
         for wall in self.walls:
             pygame.draw.lines(self.window, self.color, True, [wall.a, wall.b], int(wall.radius) * 2)
+
+        pygame.draw.lines(self.window, self.color, True, [(self.w / 2, 0), (self.w / 2, self.h)], 20)

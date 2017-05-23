@@ -13,7 +13,7 @@ class ScoreDisplay(GameObject):
 
     def __init__(self, window, space, event_manager):
         super(ScoreDisplay, self).__init__(window, space, event_manager)
-        self.color = THECOLORS['lightgray']
+        self.color = THECOLORS['gray2']
         self.w, self.h = window.get_size()
         self.score_font = pygame.font.Font(get_resource_path('fonts', 'pong_score.ttf'), self.h / 8)
         self.text_font = pygame.font.SysFont('consolas', self.h / 4)

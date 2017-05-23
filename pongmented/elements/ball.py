@@ -23,13 +23,14 @@ def apply_player_bias(arbiter, space, data):
 
         half = data['window_width'] / 2
         if bx < half:
-            bias = (-500, 0)
-        else:
             bias = (500, 0)
+        else:
+            bias = (-500, 0)
 
-        cps.normal = bias
+        # cps.normal = bias
         ball.surface_velocity = bias
-        cps.points[0].distance = 0
+        # cps.points[0].distance = 0
+
         arbiter.contact_point_set = cps
         ball.body.apply_impulse_at_local_point(bias)
 
@@ -55,7 +56,7 @@ class Ball(GameObject):
 
         handler = space.add_collision_handler(CollisionTypes.BALL, CollisionTypes.PADDLE)
         handler.begin = notify_hit
-        handler.pre_solve = apply_player_bias
+        handler.post_solve = apply_player_bias
         handler.data.update({
             'event': PongEvents.BALL_PADDLE_HIT,
             'event_manager': self.event_manager,

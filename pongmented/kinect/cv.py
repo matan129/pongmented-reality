@@ -6,17 +6,17 @@ from numpy import uint8
 from contour_data import ContourData
 
 
-APPROX_POLY_DP_EPSILON = 1
+APPROX_POLY_DP_EPSILON = 0.001
 
 MIN_THRESH = 230
 MAX_BRIGHTNESS = 255
 MAX_CHAIN_DISTANCE = 30
-AREA_THRESHOLD = 50
+AREA_THRESHOLD = 1
 ONES_KERNEL = np.ones((3, 3), np.uint8)
 
 
 def reduce_noise(img):
-    t = cv2.erode(img, ONES_KERNEL, iterations=2)
+    t = cv2.erode(img, ONES_KERNEL, iterations=1)
     return cv2.dilate(t, ONES_KERNEL, iterations=4)
 
 
@@ -58,6 +58,7 @@ def distance(a, b):
 
 
 def min_contour_distance(contour_data_a, contour_data_b):
+    return distance(contour_data_a.center, contour_data_b.center)
     min_dist = None
 
     for ap in contour_data_a.poly:
@@ -134,7 +135,7 @@ def find_contours(threshed_channel, img):
 
 
 def detect_players(img):
-    t = thresh_white(img)
+    t = thresh_green(img)
     t = reduce_noise(t)
 
     img = cv2.merge((t, t, t))
@@ -154,7 +155,9 @@ def thresh_white(img):
 
 def thresh_green(img):
     b, g, r = thresh_channels(img)
-    g = cv2.bitwise_and(cv2.bitwise_not(cv2.bitwise_or(r, b)), g)
+    g = cv2.bitwise_or(cv2.bitwise_and(cv2.bitwise_not(cv2.bitwise_or(r, b)), g), cv2.bitwise_and(cv2.bitwise_and(r, b), g))
+    # g = cv2.bitwise_or(cv2.bitwise_not(cv2.bitwise_or(r, b)), g)
+
     return g
 
 
