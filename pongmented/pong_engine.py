@@ -11,6 +11,7 @@ from pongmented import log
 from pongmented.kinect import Kinect
 from sound import SoundManager
 from pongmented.roi import RoiPicker
+from time import sleep
 
 
 class PongEngine(object):
@@ -86,6 +87,8 @@ class PongEngine(object):
         self.ball.set_body_params((w / 2, h / 2), random_velocity)
         self.ball_started = True
 
+
+
     def process_pygame_events(self):
         """
         Handles events from pygame, like key events and mouse movement.
@@ -112,6 +115,8 @@ class PongEngine(object):
                         'left': 0
                     }
                     self.state['game_over'] = False
+                    self.ball_started = False
+                elif event.key == K_s:
                     self.ball_started = False
             elif event.type == VIDEORESIZE:
                 if event.size != self.window.get_size():
@@ -149,19 +154,17 @@ class PongEngine(object):
         """
         for event in self.event_manager:
             if event == PongEvents.FRAME_HIT:
-                # self.sound_manager.hit_sound.play()
-                pass
+                self.sound_manager.hit_sound.play()
             elif event == PongEvents.LEFT_WALL_HIT:
                 self.state['score']['right'] += 1
-                # self.sound_manager.goal_sound.play()
+                self.sound_manager.goal_sound.play()
                 self.start_ball()
             elif event == PongEvents.RIGHT_WALL_HIT:
                 self.state['score']['left'] += 1
-                # self.sound_manager.goal_sound.play()
+                self.sound_manager.goal_sound.play()
                 self.start_ball()
             elif event == PongEvents.BALL_PADDLE_HIT:
-                # self.sound_manager.hit_sound.play()
-                pass
+                self.sound_manager.hit_sound.play()
             else:
                 log.warn('Unknown event: {}', event)
 

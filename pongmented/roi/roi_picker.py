@@ -32,7 +32,7 @@ class RoiPicker(object):
         if os.path.exists(self.CONF_FILE):
             self.load_settings()
 
-        if self.window_size != self.window.get_size():
+        if not all(self.window_size != self.window.get_size()):
             self.window = pygame.display.set_mode(self.window_size, pygame.RESIZABLE | pygame.DOUBLEBUF)
 
     def reset_pos(self):
