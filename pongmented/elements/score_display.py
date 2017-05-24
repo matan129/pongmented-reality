@@ -15,8 +15,8 @@ class ScoreDisplay(GameObject):
         super(ScoreDisplay, self).__init__(window, space, event_manager)
         self.color = THECOLORS['beige']
         self.w, self.h = window.get_size()
-        self.score_font = pygame.font.Font(get_resource_path('fonts', 'pong_score.ttf'), self.h / 8)
-        self.text_font = pygame.font.SysFont('consolas', self.h / 4)
+        self.score_font = pygame.font.Font(get_resource_path('fonts', 'pong_score.ttf'), self.h / 16)
+        self.text_font = pygame.font.SysFont('consolas', self.h / 6)
 
     def render(self):
         if self.state['game_over']:
@@ -27,10 +27,12 @@ class ScoreDisplay(GameObject):
     def render_score(self):
         left_label = self.score_font.render(str(self.state['score']['left']), True, self.color)
         ll_w, _ = left_label.get_size()
-        self.window.blit(left_label, (self.w / 4 - ll_w / 2, self.h / 4))
+        score_height = self.h / 10
+        base_x = self.w / 8
+        self.window.blit(left_label, (base_x - ll_w / 2, score_height))
         right_label = self.score_font.render(str(self.state['score']['right']), True, self.color)
         rl_w, _ = right_label.get_size()
-        self.window.blit(right_label, (3 * self.w / 4 - rl_w / 2, self.h / 4))
+        self.window.blit(right_label, (7 * base_x - rl_w / 2, score_height))
 
     def render_game_over(self):
         self.window.fill(THECOLORS['black'])

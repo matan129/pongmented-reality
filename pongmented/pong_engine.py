@@ -211,24 +211,24 @@ class PongEngine(object):
         log.info('Running!')
         self.running = True
 
-        with self.kinect.activate():
-            self.setup_roi()
+        # with self.kinect.activate():
+        self.setup_roi()
 
-            while self.running:
-                self.process_pygame_events()
+        while self.running:
+            self.process_pygame_events()
 
-                if not self.running:
-                    return
+            if not self.running:
+                return
 
-                if not self.ball_started:
-                    self.start_ball()
+            if not self.ball_started:
+                self.start_ball()
 
-                if not self.state['game_over']:
-                    self.poll_kinect()
-                    self.process_element_events()
-                    self.game_status()
-                    self.push_state()
-                    self.update_all()
-                    self.advance_physics()
-                    self.render()
-                    self.tick()
+            if not self.state['game_over']:
+                self.poll_kinect()
+                self.process_element_events()
+                self.game_status()
+                self.push_state()
+                self.update_all()
+                self.advance_physics()
+                self.render()
+                self.tick()

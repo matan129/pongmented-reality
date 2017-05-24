@@ -41,5 +41,3 @@ class Walls(GameObject):
     def render(self):
         for wall in self.walls:
             pygame.draw.lines(self.window, self.color, True, [wall.a, wall.b], int(wall.radius) * 2)
-
-        # pygame.draw.lines(self.window, self.color, True, [(self.w / 2, 0), (self.w / 2, self.h)], 20)
