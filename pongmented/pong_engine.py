@@ -101,13 +101,6 @@ class PongEngine(object):
                     self.running = False
                 elif event.key == K_BACKSPACE:
                     self.setup_roi()
-                elif event.key == K_SPACE:
-                    with open(r"C:\Users\Matan Rosenberg\Documents\conf.txt") as f:
-                        line = f.readlines()[0]
-                        a, b = [int(i) for i in line.split(',')]
-                        self.state['normalizer'].tweak1 = a
-                        self.state['normalizer'].tweak2 = b
-                        log.info('Tweaks loaded: {}, {}', a, b)
                 elif event.key == K_r:
                     log.info('Restarting game session')
                     self.state['score'] = {
@@ -211,24 +204,29 @@ class PongEngine(object):
         log.info('Running!')
         self.running = True
 
-        # with self.kinect.activate():
-        self.setup_roi()
+        with self.kinect.activate():
+            self.setup_roi()
 
-        while self.running:
-            self.process_pygame_events()
+            while self.running:
+                self.process_pygame_events()
 
-            if not self.running:
-                return
+                if not self.running:
+                    return
 
-            if not self.ball_started:
-                self.start_ball()
+                if not self.ball_started:
+                    self.start_ball()
 
-            if not self.state['game_over']:
-                self.poll_kinect()
-                self.process_element_events()
-                self.game_status()
-                self.push_state()
-                self.update_all()
-                self.advance_physics()
-                self.render()
-                self.tick()
+                prev_status = self.state['game_over']
+
+                if not self.state['game_over']:
+                    self.poll_kinect()
+                    self.process_element_events()
+                    self.game_status()
+                    self.push_state()
+                    self.update_all()
+                    self.advance_physics()
+                    self.render()
+                    self.tick()
+
+                if not prev_status and self.state['game_over']:
+                    self.sound_manager.game_over.play()
