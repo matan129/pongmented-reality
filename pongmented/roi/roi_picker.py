@@ -3,6 +3,11 @@ from coordinate_normalizer import CoordinateNormalizer
 from pygame.color import THECOLORS
 import pygame
 from pygame.locals import *
+import os
+import json
+from pongmented import log
+
+CONF_DIR = os.path.join(os.getenv('LOCALAPPDATA'), 'pongmented')
 
 BLUE_VIOLET = THECOLORS['blueviolet']
 MOUSE_PRIMARY = 1
@@ -10,6 +15,9 @@ MOUSE_SECONDARY = 3
 
 
 class RoiPicker(object):
+
+    CONF_FILE = os.path.join(CONF_DIR, 'roi.json')
+
     def __init__(self, window, kinect):
         self.window = window
         self.window_size = window.get_size()
@@ -20,6 +28,12 @@ class RoiPicker(object):
         self.kinect_surface = None
         self.toggle_display = True
         self.reset_pos()
+
+        if os.path.exists(self.CONF_FILE):
+            self.load_settings()
+
+        if not all(self.window_size != self.window.get_size()):
+            self.window = pygame.display.set_mode(self.window_size, pygame.RESIZABLE | pygame.DOUBLEBUF)
 
     def reset_pos(self):
         self.pos_primary = np.array([0, 0], dtype=np.float)
@@ -36,7 +50,30 @@ class RoiPicker(object):
             self.draw_roi()
             pygame.display.flip()
 
+        self.persist_settings()
+
         return CoordinateNormalizer(self.pos_primary, self.pos_secondary, *self.window_size)
+
+    def persist_settings(self):
+        with open(self.CONF_FILE, 'w') as f:
+            json.dump({
+                'primary': tuple(self.pos_primary),
+                'secondary': tuple(self.pos_secondary),
+                'window_size': tuple(self.window_size)
+            }, f)
+
+    def load_settings(self):
+        try:
+            with open(self.CONF_FILE) as f:
+                d = json.load(f)
+                pos_primary = np.array(d['primary'])
+                pos_secondary = np.array(d['secondary'])
+                window_size = np.array(d['window_size'])
+                self.pos_primary = pos_primary
+                self.pos_secondary = pos_secondary
+                self.window_size = window_size
+        except (ValueError, KeyError):
+            log.exception('Skipping ROI restoration')
 
     def display_initial(self):
         self.window.fill(THECOLORS['green'])

@@ -8,7 +8,7 @@ setup(
     author='matan129, ronissim, tomerli97',
     description='Pong + Kinect = <3',
     install_requires=[
-        'pygame', 'pymunk', 'logbook', 'numpy', 'pykinect', 'enum34', 'pillow', 'numpy', 'click',
+        'pygame', 'pymunk', 'logbook', 'numpy', 'pykinect', 'enum34', 'pillow', 'numpy', 'click', 'opencv-python'
     ],
     include_package_data=True,
     entry_points={

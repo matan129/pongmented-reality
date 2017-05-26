@@ -14,7 +14,6 @@ class Paddle(GameObject):
         super(Paddle, self).__init__(window, space, event_manager)
         self.radius = radius
         self.idx = idx
-        self.color = THECOLORS['blue']
         self.body = pymunk.Body(body_type=pymunk.Body.KINEMATIC)
         self.body.velocity_func = constant_velocity(0)
         self.body.position = OUTSIDE
@@ -33,11 +32,16 @@ class Paddle(GameObject):
             self.body.position = self.state['normalizer'].point(round_array(position))
 
     def render(self):
-        pygame.draw.circle(self.window, self.color, round_array(self.body.position), self.radius)
+        if self.body.position.x > self.w / 2:
+            color = THECOLORS['green4']
+        else:
+            color = THECOLORS['blue4']
+
+        pygame.draw.circle(self.window, color, round_array(self.body.position), self.radius)
 
 
 class Paddles(GameObject):
-    def __init__(self, window, space, event_manager, limb_count=4, radius=30):
+    def __init__(self, window, space, event_manager, limb_count=8, radius=40):
         super(Paddles, self).__init__(window, space, event_manager)
         self.p = []
         for i in xrange(limb_count):

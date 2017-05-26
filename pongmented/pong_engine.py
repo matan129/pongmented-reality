@@ -11,6 +11,7 @@ from pongmented import log
 from pongmented.kinect import Kinect
 from sound import SoundManager
 from pongmented.roi import RoiPicker
+from time import sleep
 
 
 class PongEngine(object):
@@ -98,13 +99,16 @@ class PongEngine(object):
                     self.running = False
                 elif event.key == K_BACKSPACE:
                     self.setup_roi()
-                elif event.key == K_SPACE:
-                    with open(r"C:\Users\Matan Rosenberg\Documents\conf.txt") as f:
-                        line = f.readlines()[0]
-                        a, b = [int(i) for i in line.split(',')]
-                        self.state['normalizer'].tweak1 = a
-                        self.state['normalizer'].tweak2 = b
-                        log.info('Tweaks loaded: {}, {}', a, b)
+                elif event.key == K_r:
+                    log.info('Restarting game session')
+                    self.state['score'] = {
+                        'right': 0,
+                        'left': 0
+                    }
+                    self.state['game_over'] = False
+                    self.ball_started = False
+                elif event.key == K_s:
+                    self.ball_started = False
             elif event.type == VIDEORESIZE:
                 if event.size != self.window.get_size():
                     self.create_graphics(event.size)
@@ -141,19 +145,17 @@ class PongEngine(object):
         """
         for event in self.event_manager:
             if event == PongEvents.FRAME_HIT:
-                # self.sound_manager.hit_sound.play()
-                pass
+                self.sound_manager.hit_sound.play()
             elif event == PongEvents.LEFT_WALL_HIT:
                 self.state['score']['right'] += 1
-                # self.sound_manager.goal_sound.play()
+                self.sound_manager.goal_sound.play()
                 self.start_ball()
             elif event == PongEvents.RIGHT_WALL_HIT:
                 self.state['score']['left'] += 1
-                # self.sound_manager.goal_sound.play()
+                self.sound_manager.goal_sound.play()
                 self.start_ball()
             elif event == PongEvents.BALL_PADDLE_HIT:
-                # self.sound_manager.hit_sound.play()
-                pass
+                self.sound_manager.hit_sound.play()
             else:
                 log.warn('Unknown event: {}', event)
 
@@ -189,7 +191,9 @@ class PongEngine(object):
         self.clock.tick(self.fps)
 
     def setup_roi(self):
-        self.state['normalizer'] = RoiPicker(self.window, self.kinect).pick()
+        picker = RoiPicker(self.window, self.kinect)
+        self.window = picker.window
+        self.state['normalizer'] = picker.pick()
 
     def run(self):
         """
@@ -210,6 +214,8 @@ class PongEngine(object):
                 if not self.ball_started:
                     self.start_ball()
 
+                prev_status = self.state['game_over']
+
                 if not self.state['game_over']:
                     self.poll_kinect()
                     self.process_element_events()
@@ -219,3 +225,6 @@ class PongEngine(object):
                     self.advance_physics()
                     self.render()
                     self.tick()
+
+                if not prev_status and self.state['game_over']:
+                    self.sound_manager.game_over.play()
