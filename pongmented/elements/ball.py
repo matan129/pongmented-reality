@@ -27,10 +27,7 @@ def apply_player_bias(arbiter, space, data):
         else:
             bias = (-500, 0)
 
-        # cps.normal = bias
         ball.surface_velocity = bias
-        # cps.points[0].distance = 0
-
         arbiter.contact_point_set = cps
         ball.body.apply_impulse_at_local_point(bias)
 

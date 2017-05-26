@@ -40,7 +40,7 @@ class ScoreDisplay(GameObject):
         self.window.fill(THECOLORS['black'])
         left_winner = self.state['score']['left'] > self.state['score']['right']
 
-        rect_start = (self.w / 2, 0) if left_winner else (0, 0)
+        rect_start = (self.w / 2, 0) if not left_winner else (0, 0)
         pygame.draw.rect(self.window, THECOLORS['gold'], Rect(rect_start, (self.w / 2, self.h)))
 
         game_over_label = self.text_font.render('Game Over', True, THECOLORS['red2'])
@@ -49,6 +49,6 @@ class ScoreDisplay(GameObject):
         winner_label = self.winner_font.render('Winner!', True, THECOLORS['white'])
 
         winner_w = winner_label.get_size()[0]
-        winner_x = 3 * self.w if left_winner else self.w
+        winner_x = 3 * self.w if not left_winner else self.w
         winner_x = winner_x / 4 - winner_w / 2
         self.window.blit(winner_label, (winner_x, 3 * self.h / 4))

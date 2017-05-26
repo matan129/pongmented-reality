@@ -87,8 +87,6 @@ class PongEngine(object):
         self.ball.set_body_params((w / 2, h / 2), random_velocity)
         self.ball_started = True
 
-
-
     def process_pygame_events(self):
         """
         Handles events from pygame, like key events and mouse movement.
